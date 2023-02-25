@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Api\Rep;
 
 use App\Http\Controllers\BasicApiController;
-use App\Http\Controllers\Controller;
 use App\Http\Resources\ItemsResource;
 use App\Models\Item;
 use App\Models\SalePoint;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ItemController extends BasicApiController
 {
