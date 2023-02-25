@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Rep;
 
 use App\Http\Controllers\BasicApiController;
-use App\Http\Requests\Api\Auth\UnitRequest;
+use App\Http\Requests\Api\UnitRequest;
 use App\Http\Resources\UnitsResource;
 use App\Models\Unit;
 

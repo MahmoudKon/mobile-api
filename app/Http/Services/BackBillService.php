@@ -22,44 +22,15 @@ class BackBillService
     public function handler(array $data = [])
     {
         try {
-            $errors = $this->validateData($data);
-            if (count($errors))return ['status' => 422, 'errors' => $errors];
             DB::beginTransaction();
-                return ['status' => 200, 'data' => $this->calculate()];
+                return ['status' => 200, 'data' => $this->calculate($data)];
             DB::commit();
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
         }
     }
 
-    protected function validateData($data)
-    {
-        $errors = [];
-        $validation = validator()->make($data, [
-            'bills' => 'required|array|min:1',
-            'bills.*.client_id' => 'required|exists:clients,id,shop_id,' . $this->shop_id,
-            'bills.*.date_time' => 'required',
-            'bills.*.local_bill_no' => 'required|numeric',
-            'bills.*.sale_details' => 'required',
-            'sale_details.*.quantity' => 'required|numeric',
-            'sale_details.*.item_id' => 'required|exists:items,id,shop_id,' . $this->shop_id,
-            'sale_details.*.unit_id' => 'exists:units,id,shop_id,' . $this->shop_id,
-            'bills.*.pay_method' => 'required|numeric|in:0,1',
-            'bills.*.payment' => 'required|numeric|min:0',
-            'bills.*.discount' => 'required|numeric|min:0',
-            'bills.*.discount_type' => 'required|numeric|in:0,1'
-        ]);
-
-        if ($validation->fails()) {
-            foreach ($validation->errors()->messages() as $key => $error)
-                $errors [$key] = $error[0];
-        }
-        $this->validated_data = $validation->getData();
-        return $errors;
-    }
-
-
-    public function calculate()
+    public function calculate($bills)
     {
 //         $shop = \DB::table('badr_shop')->where('serial_id', $shop_id)->first();
 //         $adds = $shop->bill_adds;

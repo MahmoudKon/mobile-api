@@ -13,7 +13,13 @@
 					"name": "Login",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -39,133 +45,10 @@
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "login",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "user_name",
-											"value": "ahmed",
-											"type": "text"
-										},
-										{
-											"key": "password",
-											"value": "123123",
-											"type": "text"
-										},
-										{
-											"key": "player_id",
-											"value": "123456",
-											"type": "text"
-										},
-										{
-											"key": "save_email",
-											"value": "1",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{url}}/21036/login",
-									"host": [
-										"{{url}}"
-									],
-									"path": [
-										"21036",
-										"login"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Mon, 16 Jan 2023 09:05:03 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Apache/2.4.54 (Win64) OpenSSL/1.1.1q mod_fcgid/2.3.10-dev"
-								},
-								{
-									"key": "X-Powered-By",
-									"value": "PHP/8.1.13"
-								},
-								{
-									"key": "Cache-Control",
-									"value": "no-cache, private"
-								},
-								{
-									"key": "X-RateLimit-Limit",
-									"value": "60"
-								},
-								{
-									"key": "X-RateLimit-Remaining",
-									"value": "58"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5, max=100"
-								},
-								{
-									"key": "Connection",
-									"value": "Keep-Alive"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"message\": \"User Logged In Successfully\",\n    \"data\": {\n        \"id\": 126,\n        \"user_name\": \"ahmed\",\n        \"email\": \"ahmed@gmail.com\",\n        \"image\": \"http://192.168.20.69/newbadrsales/public/upload/1673859870.png\",\n        \"mobile1\": \"0128967454\"\n    },\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMGY3YjhjNmE5YTY5M2Y2OTczMTk5ODA1YTUxYmJhMDE1MGU3OTllMzQwYWMzYTYxNmRlZWFkNGE0NDk4ZWFjMjU4MTM1Y2E2NjRjNGI0ZmMiLCJpYXQiOjE2NzM4NTk5MDUuMDY5ODQ4LCJuYmYiOjE2NzM4NTk5MDUuMDY5ODUsImV4cCI6MTcwNTM5NTkwNS4wNjEzNDQsInN1YiI6IjEyNiIsInNjb3BlcyI6W119.EWncGr9nel-BsBA-A_ed5Wm3NAwyjw9Hc3fjegir_sOvvNyrFiAmD4K0yeh8sbl44OJqj1uclzN-BBl9L1wPHLoP93tMDODj-rOoB6r3Q6LkDyjijvPKC7YwdzEaPyFqDI7xxZe_xFUm0bC5NlqFvJ20oYlro1-vFjA5jHstHykT8c7LtLPITZ0mYz3pYI9dxTzipEh13TGQBH0RgTVVvtWBhMIJx8W4T_umcFqnl62n9othmj1LCL1oLH5I0nUgkdpX1bs8Y-Lm3wcrD98EzJdsly3PDi8Iem5rrTeFZbJwfx27kyOliRoxJdfDsmarr-Lz_fEY2R9PVz8d2CAn9Z6_Bk-jNV27Ja8BGkbCIk9uxuTUzvwAHLrN4feFUy947wPcpo9vldcIVsmFKPAOZpbtnk6GN-IMs5NtJLBGy9mnOzQ0cJk48Vj7TIG4N9d_6uIgkdHkOt5UdRbOmqa3Z3HhCjMOqg58er0O8F0LawrMiPe_blJqtGLPdpQqDH2Rbu3434FfM8qfJ-te15UIjxBcOldB1ONtN74nBJVXiKF8S7fjsDtQu5agDtBjKvhQWsuJlgeWV3mNsyR_U87FanKZD8Fb3I12GjIP_697CIyWsM16KhqI1y-MBtFZTg_Mp3lX6eSXuLpe_OuLLn37k6daPZYBt2yXV5hsKWIJ5LU\"\n}"
-						}
-					]
-				},
-				{
-					"name": "Logout",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{url}}/logout",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"logout"
-							]
-						}
-					},
 					"response": []
 				},
 				{
-					"name": "Details",
+					"name": "Profile",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -202,76 +85,40 @@
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "userProfile",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{url}}/21036/profile",
-									"host": [
-										"{{url}}"
-									],
-									"path": [
-										"21036",
-										"profile"
-									]
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
 								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Mon, 16 Jan 2023 09:39:22 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Apache/2.4.54 (Win64) OpenSSL/1.1.1q mod_fcgid/2.3.10-dev"
-								},
-								{
-									"key": "X-Powered-By",
-									"value": "PHP/8.1.13"
-								},
-								{
-									"key": "Cache-Control",
-									"value": "no-cache, private"
-								},
-								{
-									"key": "X-RateLimit-Limit",
-									"value": "60"
-								},
-								{
-									"key": "X-RateLimit-Remaining",
-									"value": "58"
-								},
-								{
-									"key": "Vary",
-									"value": "Authorization"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5, max=100"
-								},
-								{
-									"key": "Connection",
-									"value": "Keep-Alive"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/logout",
+							"host": [
+								"{{url}}"
 							],
-							"cookie": [],
-							"body": "{\n    \"status\": true,\n    \"message\": \"Profile Data\",\n    \"data\": {\n        \"id\": 126,\n        \"user_name\": \"ahmed\",\n        \"email\": \"ahmed@gmail.com\",\n        \"image\": \"http://192.168.20.69/newbadrsales/public/upload/1673859870.png\",\n        \"mobile1\": \"0128967454\"\n    },\n    \"token\": null\n}"
+							"path": [
+								"logout"
+							]
 						}
-					]
+					},
+					"response": []
 				}
 			]
 		},
@@ -2235,7 +2082,7 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "وحدة افتراضي2",
+									"value": "وحدة افتراضي3",
 									"type": "text"
 								}
 							]
@@ -2278,19 +2125,19 @@
 							"urlencoded": [
 								{
 									"key": "name",
-									"value": "وحدة افتراضي3",
+									"value": "وحدة افتراضي4",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{url}}/units/41",
+							"raw": "{{url}}/units/2",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"units",
-								"41"
+								"2"
 							]
 						}
 					},
@@ -2325,13 +2172,13 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "{{url}}/units/36",
+							"raw": "{{url}}/units/2",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"units",
-								"36"
+								"2"
 							]
 						}
 					},
@@ -2363,13 +2210,13 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "{{url}}/units/39",
+							"raw": "{{url}}/units/2",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"units",
-								"39"
+								"2"
 							]
 						}
 					},

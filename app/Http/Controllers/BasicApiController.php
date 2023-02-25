@@ -12,10 +12,8 @@ class BasicApiController extends Controller
 
     public function __construct()
     {
-        if (auth()->user()) {
-            $this->shop_id    = auth()->user()->shop_id;
-            $this->sale_point = auth()->user()->sale_point;
-        }
+        $this->shop_id    = shopId();
+        $this->sale_point = salePoint();
     }
 
     /**

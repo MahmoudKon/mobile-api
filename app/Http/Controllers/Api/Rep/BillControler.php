@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Rep;
 
 use App\Http\Controllers\BasicApiController;
-use App\Http\Resources\BillAddResource;
+use App\Http\Requests\Api\InvoiceRequest;
 use App\Models\Badrshop;
 use App\Models\BillAdd;
 use App\Models\SalePoint;
@@ -18,17 +18,11 @@ class BillControler extends BasicApiController
         $rows = BillAdd::select('id', 'addition_name as name', 'check_addition as type', DB::raw("TRUNCATE(addition_value, $p_scale) as value"))->whereIn('add_role', [0, 1])->where('check_bill_type', '!=', 2)->get()->toArray();
         return $this->returnData($rows);
     }
-    public function newBill(Request $request)
+
+    public function newBill(InvoiceRequest $request)
     {
-        $validation = $this->validateRequest($request->all());
-        if (count($validated['errors']) > 0) return $this->sendError(errorMessages: $validated['errors']);
-
-        $calculate = $this->calculate($request->bills, $shop_id);
-
-        return [
-            'status' => true,
-            'data' => $calculate
-        ];
+        $calculate = $this->calculate($request->validated(), shopId());
+        return $this->sendResponse(result: $calculate);
     }
 
     public function show(Request $request, $id)
@@ -275,34 +269,5 @@ class BillControler extends BasicApiController
             array_push($text, $value);
         }
         return $text;
-    }
-
-    protected function validateRequest(array $data, null|int $id = null): array
-    {
-        $allow_lines = BadrShop::select('allow_lines')->where('serial_id', $this->shop_id)->first()->allow_lines ?? 0;
-        $roles = [
-            'bills'                     => 'required',
-            'bills.*.client_id'         => "required|exists:clients,id,shop_id,$this->shop_id",
-            'bills.*.date_time'         => 'required|date_format:Y-m-d h:i:s A',
-            'bills.*.local_bill_no'     => 'required|numeric',
-            'bills.*.sale_details'      => 'required',
-            'sale_details.*.quantity'   => 'required|numeric',
-            'sale_details.*.item_id'    => "required|exists:items,id,shop_id,$this->shop_id",
-            'sale_details.*.unit_id'    => "exists:units,id,shop_id,$this->shop_id",
-            'bills.*.pay_method'        => 'required|numeric|in:0,1',
-            'bills.*.payment'           => 'required|numeric|min:0',
-            'bills.*.discount'          => 'required|numeric|min:0',
-            'bills.*.discount_type'     => 'required|numeric|in:0,1',
-        ];
-        if (auth()->user()->line && $allow_lines)
-            $roles['bills.*.client_city'] = $check ? 'required|string' : 'nullable';
-
-        $errors = [];
-        $validation = validator()->make($data, $roles);
-
-        if ($validation->fails()) {
-            foreach ($validation->errors()->getMessages() as $key => $error) $errors[$key] = $error[0];
-        }
-        return ['validated' => $validation->validated(), 'errors' => $errors];
     }
 }
