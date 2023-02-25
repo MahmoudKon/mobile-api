@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\Rep;
 
 use App\Http\Controllers\BasicApiController;
+use App\Http\Requests\Api\Auth\UnitRequest;
 use App\Http\Resources\UnitsResource;
 use App\Models\Unit;
-use Illuminate\Http\Request;
 
 class UnitController extends BasicApiController
 {
@@ -17,15 +17,11 @@ class UnitController extends BasicApiController
                     : $this->sendError('no data');
     }
 
-    public function store(Request $request)
+    public function store(UnitRequest $request)
     {
-        $validation = $this->validateRequest($request->all());
-        if (count($validation['errors'])) {
-            return $this->sendError('no data', $validation['errors']);
-        }
-        $row = Unit::create($validation['validated']);
+        $row = Unit::create($request->validated());
         return $row
-                ? $this->sendResponse('Save Done successfully', ['data' => new UnitsResource($row)])
+                ? $this->sendResponse('Unit created successfully', ['data' => new UnitsResource($row)])
                 : $this->sendError('Error try again');
     }
 
@@ -33,21 +29,16 @@ class UnitController extends BasicApiController
     {
         $row = Unit::find($id);
         return $row
-                ? $this->sendResponse('Save Done successfully', ['data' => new UnitsResource($row)])
+                ? $this->sendResponse(result: ['data' => new UnitsResource($row)])
                 : $this->sendError('This unit not found');
     }
 
-    public function update(Request $request, $id)
+    public function update(UnitRequest $request, $id)
     {
-        $validation = $this->validateRequest($request->all(), $id);
-        if (count($validation['errors'])) {
-            return $this->sendError('no data', $validation['errors']);
-        }
-
-        $row = Unit::where('id',$id)->first();
+        $row = Unit::find($id);
         if (!$row) $this->sendError('This unit not exists');
-        $row->update($validation['validated']);
-        return $this->sendResponse('Save Done successfully', ['data' => new UnitsResource($row)]);
+        $row->update($request->validated());
+        return $this->sendResponse('Unit updated successfully', ['data' => new UnitsResource($row)]);
     }
 
     public function destroy($id)
@@ -55,19 +46,8 @@ class UnitController extends BasicApiController
         $row = Unit::find($id);
         if ($row) {
             $row->delete();
-            return $this->sendResponse('Unit Deleted successfully');
+            return $this->sendResponse('Unit deleted successfully');
         }
         return $this->sendError('This unit not found');
-    }
-
-    protected function validateRequest(array $data, null|int $id = null): array
-    {
-        $errors = [];
-        $validation = validator()->make($data, ['name' => "required|unique:units,name,$id,id,shop_id,$this->shop_id"]);
-
-        if ($validation->fails()) {
-            foreach ($validation->errors()->all() as $error)  array_push($errors, $error);
-        }
-        return ['validated' => $validation->validated(), 'errors' => $errors];
     }
 }

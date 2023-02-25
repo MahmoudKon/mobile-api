@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (request()->is('*/api/*')) {
+        if (request()->is(env('API_CHECK_REQUEST', 'api/*'))) {
             $this->setAuth();
         }
     }
