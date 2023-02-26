@@ -11,28 +11,19 @@ use Illuminate\Http\Request;
 
 class LocationController extends BasicApiController
 {
-    public function index()
+    public function __construct()
     {
-        $rows = Location::select('id', 'lat', 'lon', 'time', 'shop_id', 'user_id')->with('user')->get();
-        return $this->returnData(LocationsResource::collection($rows));
+        parent::__construct(Location::class, LocationsResource::class);
     }
 
     public function store(LocationRequest $request)
     {
         $rows = [];
-        foreach ($request->validated('details') as $row) {
+        foreach ($request->validated('details') as $row)
             $rows[] = array_merge($row, ['shop_id' => shopId(), 'user_id' => auth()->id()]);
-        }
+        
         Location::insert($rows);
         return $this->returnData($rows);
-    }
-
-    public function show($id)
-    {
-        $row = Location::select('id', 'lat', 'lon', 'time', 'shop_id', 'user_id')->with('user')->find($id);
-        return $row
-            ? $this->sendResponse(result: ['data' => new LocationsResource($row)])
-            : $this->sendError('This location not found');
     }
 
     public function update(LocationRequest $request, $id)
@@ -43,10 +34,8 @@ class LocationController extends BasicApiController
         return $this->sendResponse('Location updated successfully', ['data' => new LocationsResource($row)]);
     }
 
-    public function destroy($id)
+    public function query(?int $id = null): \Illuminate\Database\Eloquent\Builder
     {
-        return Location::where('id', $id)->delete() > 0
-                    ? $this->sendResponse('Location deleted successfully')
-                    : $this->sendError('This location not found');
+        return $this->model::query()->select('id', 'name');
     }
 }

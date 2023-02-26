@@ -3,18 +3,17 @@
 namespace App\Http\Controllers\Api\Rep;
 
 use App\Http\Controllers\BasicApiController;
+use App\Http\Controllers\GeneralApiController;
 use App\Http\Requests\Api\UnitRequest;
 use App\Http\Resources\UnitsResource;
 use App\Models\Unit;
+use Illuminate\Database\Eloquent\Builder;
 
-class UnitController extends BasicApiController
+class UnitController extends GeneralApiController
 {
-    public function index()
+    public function __construct()
     {
-        $rows = Unit::select('id', 'name')->get();
-        return $rows->count()
-                    ? $this->sendResponse(result: ['data' => UnitsResource::collection($rows)])
-                    : $this->sendError('no data');
+        parent::__construct(Unit::class, UnitsResource::class);
     }
 
     public function store(UnitRequest $request)
@@ -25,14 +24,6 @@ class UnitController extends BasicApiController
                 : $this->sendError('Error try again');
     }
 
-    public function show($id)
-    {
-        $row = Unit::find($id);
-        return $row
-                ? $this->sendResponse(result: ['data' => new UnitsResource($row)])
-                : $this->sendError('This unit not found');
-    }
-
     public function update(UnitRequest $request, $id)
     {
         $row = Unit::find($id);
@@ -41,13 +32,8 @@ class UnitController extends BasicApiController
         return $this->sendResponse('Unit updated successfully', ['data' => new UnitsResource($row)]);
     }
 
-    public function destroy($id)
+    public function query(?int $id = null): \Illuminate\Database\Eloquent\Builder
     {
-        $row = Unit::find($id);
-        if ($row) {
-            $row->delete();
-            return $this->sendResponse('Unit deleted successfully');
-        }
-        return $this->sendError('This unit not found');
+        return $this->model::query()->when($id, fn($q) => $q->where('id', $id))->select('id', 'name');
     }
 }
