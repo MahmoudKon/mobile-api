@@ -27,13 +27,13 @@ class UnitController extends GeneralApiController
     public function update(UnitRequest $request, $id)
     {
         $row = Unit::find($id);
-        if (!$row) $this->sendError('This unit not exists');
+        if (!$row) return $this->sendError('This unit not exists');
         $row->update($request->validated());
         return $this->sendResponse('Unit updated successfully', ['data' => new UnitsResource($row)]);
     }
 
     public function query(?int $id = null): \Illuminate\Database\Eloquent\Builder
     {
-        return $this->model::query()->when($id, fn($q) => $q->where('id', $id))->select('id', 'name');
+        return $this->model::query()->select('id', 'name')->when($id, fn($q) => $q->where('id', $id));
     }
 }
