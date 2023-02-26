@@ -6,12 +6,11 @@ use App\Traits\FilterPerShop;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class Invoice extends Model
 {
     use FilterPerShop;
 
-    protected $table = 'clients';
+    protected $table = 'invoices_';
     protected $guarded = ['id'];
     public $timestamps = false;
-
 }

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Api\Rep;
 
 use App\Http\Controllers\BasicApiController;
+use App\Http\Resources\ClientsResource;
 use App\Http\Resources\ItemPricesResource;
 use App\Http\Resources\ItemTypesResource;
 use App\Http\Resources\SettingsResource;
 use App\Models\Badrshop;
 use App\Models\City;
+use App\Models\Client;
+use App\Models\ClientsGroup;
 use App\Models\ItemPrice;
 use App\Models\ItemType;
 use App\Models\PriceList;
@@ -44,5 +47,15 @@ class GeneralListController extends BasicApiController
     {
         $rows = ItemPrice::query()->select('id', 'shop_id', 'price', 'list_quant', 'item_id', 'list_id')->with('item', 'list')->get();
         return $this->returnData(ItemPricesResource::collection($rows));
+    }
+
+    public function clientsGroups()
+    {
+        $groups = ClientsGroup::select('id', 'name', 'group_discount')->when(auth()->user()->clients_group != 0, function ($query) {
+                                    $query->where('id', auth()->user()->clients_group);
+                                })->get()->toArray();
+        $clients = (new ClientController)->query()->get();
+        $response = ['groups' => $groups, 'clients' => ClientsResource::collection($clients)];
+        return $this->sendResponse(result: $response);
     }
 }

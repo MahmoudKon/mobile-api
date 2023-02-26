@@ -22,16 +22,16 @@ class LocationController extends GeneralApiController
         $rows = [];
         foreach ($request->validated('details') as $row)
             $rows[] = array_merge($row, ['shop_id' => shopId(), 'user_id' => auth()->id()]);
-        Location::insert($rows);
+        $this->model::insert($rows);
         return $this->returnData($rows);
     }
 
     public function update(LocationRequest $request, $id)
     {
-        $row = Location::find($id);
+        $row = $this->model::find($id);
         if (!$row) return $this->sendError('This location not exists');
         $row->update($request->validated());
-        return $this->sendResponse('Row updated successfully', ['data' => new LocationsResource($row)]);
+        return $this->sendResponse('Row updated successfully', ['data' => new $this->resource($row)]);
     }
 
     public function query(?int $id = null): \Illuminate\Database\Eloquent\Builder

@@ -6,12 +6,9 @@ use App\Traits\FilterPerShop;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class LineCity extends Model
 {
-    use FilterPerShop;
-
-    protected $table = 'clients';
+    protected $table = 'line_cities';
     protected $guarded = ['id'];
     public $timestamps = false;
-
 }

@@ -2,16 +2,12 @@
 
 namespace App\Models;
 
-use App\Traits\FilterPerShop;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class LineClient extends Model
 {
-    use FilterPerShop;
-
-    protected $table = 'clients';
+    protected $table = 'line_clients';
     protected $guarded = ['id'];
     public $timestamps = false;
-
 }

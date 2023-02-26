@@ -13,8 +13,7 @@ class LoginController extends BasicApiController
     public function login(LoginRequest $request): \Illuminate\Http\JsonResponse
     {
         if (auth()->attempt($this->credentials($request))) {
-
-            if (Carbon::parse(auth()->user()->run_date) < today())
+            if ( ! auth()->user()->shop->checkIsActive() )
                 return $this->sendError('You subscription expire');
 
             if (auth()->user()->login == 0)

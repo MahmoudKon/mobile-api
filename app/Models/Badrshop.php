@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +12,15 @@ use Illuminate\Support\Facades\Hash;
 class Badrshop extends Model
 {
     use HasFactory;
+
     protected $table = 'badr_shop';
+
+    public function checkIsActive(): bool
+    {
+        if ($this->online) return true;
+        if (Carbon::parse($this->run_date) > today()) return true;
+        return false;
+    }
 
     protected function logoPath(): Attribute
     {

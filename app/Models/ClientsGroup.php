@@ -6,12 +6,10 @@ use App\Traits\FilterPerShop;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class ClientsGroup extends Model
 {
     use FilterPerShop;
 
-    protected $table = 'clients';
+    protected $table = 'clients_groups';
     protected $guarded = ['id'];
-    public $timestamps = false;
-
 }
