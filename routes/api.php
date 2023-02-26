@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login', 'Api\Auth\LoginController@login');
 Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
-    Route::controller('LoginController')->namespace('Auth')->group(function () {
+    Route::controller('UserController')->namespace('Auth')->group(function () {
         Route::get('profile', 'profile');
         Route::post('logout', 'logout');
         Route::post('refresh', 'refresh');

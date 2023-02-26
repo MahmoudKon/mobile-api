@@ -23,28 +23,10 @@ class LoginController extends BasicApiController
             if ($request->player_id)
                 auth()->user()->update(['player_id' => $request->player_id]);
 
-            return $this->sendResponse('User login successfully.', $this->createToken());
+            return $this->sendResponse('User login successfully.', self::createToken());
         } else {
             return $this->sendError('These credentials do not match our records.');
         }
-    }
-
-    public function refresh(): \Illuminate\Http\JsonResponse
-    {
-        $this->deleteOldTokens();
-        return $this->sendResponse('Token refreshed successfully.', $this->createToken());
-    }
-
-    public function profile(): \Illuminate\Http\JsonResponse
-    {
-        auth()->user()->load('shop', 'salePoint');
-        return $this->sendResponse('', ['data' => new UsersResource(auth()->user())]);
-    }
-
-    public function logout(): \Illuminate\Http\JsonResponse
-    {
-        $this->deleteOldTokens();
-        return $this->sendResponse('User Logged out');
     }
 
     protected function credentials(Request $request): array
@@ -55,18 +37,13 @@ class LoginController extends BasicApiController
         ];
     }
 
-    protected function createToken(): array
+    public static function createToken(): array
     {
-        $this->deleteOldTokens();
+        auth()->user()->tokens()->delete();
         auth()->user()->load('shop');
         return [
             'token' => auth()->user()->createToken(env('API_HASH_TOKEN', 'badr'))->accessToken->token,
             'user'  => new UsersResource(auth()->user()),
         ];
-    }
-
-    protected function deleteOldTokens(): void
-    {
-        auth()->user()->tokens()->delete();
     }
 }
