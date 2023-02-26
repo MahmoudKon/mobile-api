@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class SalePoint extends Model
 {
     use FilterPerShop;
-    
+
     protected $table = 'sale_points';
     protected $guarded = ['id'];
     public $timestamps = false;
@@ -23,6 +23,6 @@ class SalePoint extends Model
 
     public function store()
     {
-        return $this->belongsTo(Store::class, 'store_id', 'id')->select('id', 'name')->withDefault(['id' => '', 'name' => 'المخزن الرئيسي']);
+        return $this->belongsTo(Store::class, 'store_id', 'id')->select('id', 'store_name as name')->withDefault(['id' => 0, 'name' => 'المخزن الرئيسي']);
     }
 }

@@ -4,9 +4,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login', 'Api\Auth\LoginController@login');
 Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
-    Route::namespace('Auth')->group(function () {
-        Route::get('profile', 'LoginController@profile');
-        Route::post('logout', 'LoginController@logout');
+    Route::controller('LoginController')->namespace('Auth')->group(function () {
+        Route::get('profile', 'profile');
+        Route::post('logout', 'logout');
+        Route::post('refresh', 'refresh');
     });
 
     Route::namespace('Rep')->group(function () {
@@ -19,6 +20,9 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
         });
 
         Route::apiResource('units', 'UnitController');
+
+        Route::apiResource('locations', 'LocationController');
+
         Route::get('bills/adds', 'BillControler@additions');
 
         Route::apiResource('items', 'ItemController');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Rep;
 
 use App\Http\Controllers\BasicApiController;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\LocationRequest;
 use App\Http\Resources\LocationsResource;
 use App\Models\Location;
 use Illuminate\Http\Request;
@@ -12,35 +13,40 @@ class LocationController extends BasicApiController
 {
     public function index()
     {
-        $rows = Location::select('id', 'lat', 'lon', 'time', 'shop_id')->with('user')->get();
+        $rows = Location::select('id', 'lat', 'lon', 'time', 'shop_id', 'user_id')->with('user')->get();
         return $this->returnData(LocationsResource::collection($rows));
     }
 
-    public function store(Request $request)
+    public function store(LocationRequest $request)
     {
-        $validated = $this->validateRequest($request->all());
-        if (count($validated['errors']) > 0) return $this->sendError(errorMessages: $validated['errors']);
         $rows = [];
-        foreach ($validated['validated']['details'] as $row) {
-            $rows[] = array_merge($row, ['shop_id' => auth()->user()->shop_id ?? 21036, 'user_id' => auth()->id() ?? 3]);
+        foreach ($request->validated('details') as $row) {
+            $rows[] = array_merge($row, ['shop_id' => shopId(), 'user_id' => auth()->id()]);
         }
         Location::insert($rows);
         return $this->returnData($rows);
     }
 
-    protected function validateRequest(array $data, null|int $id = null): array
+    public function show($id)
     {
-        $errors = [];
-        $validation = validator()->make($data, [
-            'details' => "required|array|min:1",
-            'details.*.time' => "required|date_format:Y-m-d H:i:s",
-            'details.*.lon' => "required|string",
-            'details.*.lat' => "required|string",
-        ]);
+        $row = Location::select('id', 'lat', 'lon', 'time', 'shop_id', 'user_id')->with('user')->find($id);
+        return $row
+            ? $this->sendResponse(result: ['data' => new LocationsResource($row)])
+            : $this->sendError('This location not found');
+    }
 
-        if ($validation->fails()) {
-            foreach ($validation->errors()->getMessages() as $key => $error) $errors[$key] = $error[0];
-        }
-        return ['validated' => $validation->validated(), 'errors' => $errors];
+    public function update(LocationRequest $request, $id)
+    {
+        $row = Location::find($id);
+        if (!$row) $this->sendError('This location not exists');
+        $row->update($request->validated());
+        return $this->sendResponse('Location updated successfully', ['data' => new LocationsResource($row)]);
+    }
+
+    public function destroy($id)
+    {
+        return Location::where('id', $id)->delete() > 0
+                    ? $this->sendResponse('Location deleted successfully')
+                    : $this->sendError('This location not found');
     }
 }

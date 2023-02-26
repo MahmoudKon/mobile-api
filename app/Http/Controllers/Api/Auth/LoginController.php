@@ -35,18 +35,9 @@ class LoginController extends BasicApiController
         return $this->sendResponse('Token refreshed successfully.', $this->createToken());
     }
 
-    public function saveMobileToken(): \Illuminate\Http\JsonResponse
-    {
-        if (! request()->mobile_token)
-            return $this->sendError('Mobile token is required');
-
-        auth()->user()->update(['mobile_token' => request('mobile_token')]);
-        return $this->sendResponse('Mobile token saved successfully');
-    }
-
     public function profile(): \Illuminate\Http\JsonResponse
     {
-        auth()->user()->load('shop');
+        auth()->user()->load('shop', 'salePoint');
         return $this->sendResponse('', ['data' => new UsersResource(auth()->user())]);
     }
 

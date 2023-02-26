@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\SalePoint;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UsersResource extends JsonResource
@@ -15,15 +14,12 @@ class UsersResource extends JsonResource
      */
     public function toArray($request)
     {
-//        $sale_point = SalePoint::where('id', $this->sale_point)->where('shop_id', $this->shop_id)->first();
-//        $store_name = $sale_point->store_id != 0 ? $sale_point->store->name : 'المخزن الرئيسي';
-
         return [
             "id" => $this->id,
             "name" => $this->name,
             "user_name" => $this->user_name,
             "shop_id" => $this->shop_id,
-            "shop_name" => $this->badrShop->shop_name ?? '',
+            "shop_name" => $this->shop->shop_name ?? '',
             "show_clients" => (bool) $this->show_clients,
             "price_decimal" => $this->shop->decimal_num_price,
             "quantity_decimal" => $this->shop->decimal_num_quant,
@@ -33,7 +29,8 @@ class UsersResource extends JsonResource
             "currency" => $this->shop->currency,
             "show_pay_price" => $this->show_pay_price,
             "can_edit_client_days" => $this->can_edit_client_days,
-//            "store_name" => $store_name,
+            "store_name" => $this->salePoint->store->name,
+            "player_id" => $this->player_id,
             'allow_lines' => $this->shop->allow_lines,
         ];
     }

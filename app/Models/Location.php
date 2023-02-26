@@ -14,7 +14,7 @@ class Location extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select('id', 'name')->withDefault(['id' => '', 'name' => '']);
+        return $this->belongsTo(User::class, 'user_id', 'id')->select('id', 'user_name as name')->withDefault(['id' => '', 'name' => '']);
     }
 
     protected static function boot()
@@ -22,13 +22,12 @@ class Location extends Model
         parent::boot();
 
         static::addGlobalScope('perShop', function (Builder $builder) {
-            $shop_id = auth()->user()->shop_id ?? 21036;
-            $builder->where('shop_id', $shop_id)->where('user_id', auth()->id() ?? 3)->orderBy('id', 'desc');
+            $builder->where('shop_id', shopId())->where('user_id', auth()->id())->orderBy('id', 'desc');
         });
 
         static::creating(function ($model) {
-            $model->shop_id = auth()->user()->shop_id ?? 21036;
-            $model->user_id = auth()->id() ?? 3;
+            $model->shop_id = shopId();
+            $model->user_id = auth()->id();
         });
     }
 }
