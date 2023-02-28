@@ -40,6 +40,8 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
         Route::get('client/{client_id}/receipts', 'ClientReceiptController@index');
         Route::apiResource('clients', 'ClientController');
 
+        Route::get('point-money-day', 'ReportController@index');
+
         Route::controller('BackBillController')->group(function() {
             Route::get('back-bills', 'index');
             Route::post('back-bills', 'store');

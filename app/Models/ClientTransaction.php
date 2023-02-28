@@ -32,4 +32,9 @@ class ClientTransaction extends Model
     {
         return $this->belongsTo(Client::class, 'client_id', 'id')->select('id', 'client_name as name')->withDefault(['id' => '', 'name' => '']);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class)->select('id', 'user_name')->withDefault(['id' => '', 'user_name' => '']);
+    }
 }
