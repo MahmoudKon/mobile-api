@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
-class BillAdd extends Model
+class InvoiceAdd extends Model
 {
     use FilterPerShop;
 

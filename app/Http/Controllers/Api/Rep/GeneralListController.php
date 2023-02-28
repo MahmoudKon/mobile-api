@@ -30,13 +30,6 @@ class GeneralListController extends BasicApiController
         $rows = PriceList::select('id', 'list_name as name')->get()->toArray();
         return $this->returnData($rows);
     }
-
-    public function itemTypes()
-    {
-        $rows = ItemType::select('id', 'name', 'upload_img')->get();
-        return $this->returnData(ItemTypesResource::collection($rows));
-    }
-
     public function cities()
     {
         $rows = City::select('id', 'city_name as name')->get()->toArray();

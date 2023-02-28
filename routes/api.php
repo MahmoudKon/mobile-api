@@ -15,17 +15,24 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
             Route::get('settings', 'settings');
             Route::get('list-prices', 'prices');
             Route::get('item-prices', 'itemsPrices');
-            Route::get('item-types', 'itemTypes');
             Route::get('cities', 'cities');
             Route::get('clients-groups', 'clientsGroups');
         });
 
+        Route::controller('InvoiceController')->group(function () {
+            Route::get('invoices/sales', 'sales');
+            Route::get('invoices/back-sales', 'backSales');
+            Route::get('invoices/purchases', 'purchases');
+            Route::get('invoices/back-purchases', 'backPurchases');
+            Route::get('invoices/additions', 'additions');
+        });
+
+
+        Route::apiResource('item-types', 'ItemTypeController');
 
         Route::apiResource('units', 'UnitController');
 
         Route::apiResource('locations', 'LocationController');
-
-        Route::get('bills/adds', 'BillControler@additions');
 
         Route::apiResource('items', 'ItemController');
 

@@ -3,7 +3,6 @@
 namespace App\Http\Services;
 
 use App\Models\ClientTransaction;
-use App\Models\ItemTransaction;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -290,7 +289,6 @@ class BackBillService
 
     public function createTransactions()
     {
-        ItemTransaction::store($this->items_transactions);
         ClientTransaction::store($this->clients_transactions);
     }
 }

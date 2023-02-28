@@ -16,7 +16,7 @@ trait FilterPerShop
         });
 
         static::creating(function ($model) {
-            $model->shop_id = auth()->user()->shop_id ?? 21036;
+            $model->shop_id = auth()->user()->shop_id;
         });
     }
 }

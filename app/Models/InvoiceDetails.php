@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use App\Traits\FilterPerShop;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ItemTransaction extends Model
+class InvoiceDetails extends Model
 {
     use FilterPerShop;
 
-    protected $table = 'items_transaction';
+    protected $table = 'invoices_details';
     protected $guarded = ['id'];
     public $timestamps = false;
 }
+
+

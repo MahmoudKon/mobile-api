@@ -2,13 +2,20 @@
 
 namespace App\Models;
 
+use App\Traits\FilterPerShop;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ItemType extends Model
 {
+    use FilterPerShop;
+
     protected $table = 'items_type';
+
+    protected $guarded = ['id'];
+
+    public $timestamps = false;
 
     protected function uploadImg(): Attribute
     {
