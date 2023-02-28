@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers\Api\Rep;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\GeneralApiController;
-use App\Http\Requests\ClientRequest;
+use App\Http\Requests\Api\ClientRequest;
 use App\Http\Resources\ClientsResource;
 use App\Http\Services\ClientService;
 use App\Models\Badrshop;
 use App\Models\Client;
-use App\Models\LineCity;
-use Illuminate\Http\Request;
 
 class ClientController extends GeneralApiController
 {
