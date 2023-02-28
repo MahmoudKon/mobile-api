@@ -25,7 +25,7 @@ class ClientReceiptController extends BasicApiController
     {
         try {
             DB::beginTransaction();
-            $user_sale_point = SalePoint::select('id', 'money_point')->whereId(auth()->user()->sale_point)->first();
+            $user_sale_point = SalePoint::select('id', 'money_point')->whereId(salePointId())->first();
             foreach ($request->details as $index => $detail) {
                 $client = Client::select('id', 'balance')->find($detail['client_id']);
                 if ($detail['type'] == 1) {

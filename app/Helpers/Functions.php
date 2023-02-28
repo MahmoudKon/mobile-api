@@ -6,8 +6,8 @@ if ( !function_exists( 'shopId' ) ) {
     }
 }
 
-if ( !function_exists( 'salePoint' ) ) {
-    function salePoint() {
+if ( !function_exists( 'salePointId' ) ) {
+    function salePointId() {
         return auth()->user()->sale_point ?? null;
     }
 }

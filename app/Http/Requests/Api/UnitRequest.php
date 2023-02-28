@@ -27,7 +27,7 @@ class UnitRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => "required|unique:units,name,".request()->route()->unit.",id,shop_id,".auth()->user()->shop_id
+            'name' => "required|unique:units,name,".request()->route()->unit.",id,shop_id,".shopId()
         ];
     }
 }

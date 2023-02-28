@@ -15,7 +15,7 @@ class BackBillService
 
     public function __construct()
     {
-        $this->shop_id = auth()->user()->shop_id;
+        $this->shop_id = shopId();
     }
 
     public function handler(array $data = [])

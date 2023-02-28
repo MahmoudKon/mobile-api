@@ -5,7 +5,7 @@ namespace App\Http\Requests\Api;
 use App\Traits\HandleValidationError;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ItemTypeRequest extends FormRequest
+class SpendRequest extends FormRequest
 {
     use HandleValidationError;
 
@@ -27,8 +27,12 @@ class ItemTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => "required|unique:items_type,name,".request()->route()->item_type.",id,shop_id,".shopId(),
-            'upload_img' => (request()->route()->item_type ? 'nullable' : 'required') . '|image|mimes:jpeg,png,jpg,gif,svg',
+            'term_id'   => "required|exists:spending_item,id,shop_id,".shopId(),
+            'date'      => "required|date_format:Y-m-d",
+            'amount'    => "nullable|numeric|min:0",
+            'local_id'  => "required|min:1",
+            'notes'     => "nullable|string",
+            'file'      => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,pdf',
         ];
     }
 }

@@ -14,6 +14,8 @@ use App\Models\ClientsGroup;
 use App\Models\ItemPrice;
 use App\Models\ItemType;
 use App\Models\PriceList;
+use App\Models\SalePoint;
+use App\Models\SpendItem;
 use Illuminate\Http\Request;
 
 class GeneralListController extends BasicApiController
@@ -40,6 +42,18 @@ class GeneralListController extends BasicApiController
     {
         $rows = ItemPrice::query()->select('id', 'shop_id', 'price', 'list_quant', 'item_id', 'list_id')->with('item', 'list')->get();
         return $this->returnData(ItemPricesResource::collection($rows));
+    }
+
+    public function salePoints()
+    {
+        $rows = SalePoint::query()->select('id', 'point_name as name')->get()->toArray();
+        return $this->returnData($rows);
+    }
+
+    public function expensesTerms()
+    {
+        $rows = SpendItem::select('id', 'name')->get()->toArray();
+        return $this->returnData($rows);
     }
 
     public function clientsGroups()

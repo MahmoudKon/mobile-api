@@ -34,8 +34,7 @@ class Badrshop extends Model
         parent::boot();
 
         static::addGlobalScope('perShop', function (Builder $builder) {
-            $shop_id = auth()->user()->shop_id ?? 21036;
-            $builder->where('serial_id', $shop_id);
+            $builder->where('serial_id', shopId());
         });
     }
 }

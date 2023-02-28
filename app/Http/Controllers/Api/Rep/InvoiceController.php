@@ -57,7 +57,7 @@ class InvoiceController extends BasicApiController
 
     public function show($id)
     {
-        $shop = Badrshop::select('currency', 'bill_adds')->where('serial_id', auth()->user()->shop_id)->first();
+        $shop = Badrshop::select('currency', 'bill_adds')->where('serial_id', shopId())->first();
 
         $bill = SaleBackInvoice::select('id', 'bill_no', 'sale_date', 'net_price', 'local_bill_no', 'client_id', 'payment', 'discount', 'discount_type')
                                 ->with('client', 'details')->where('id', $id)->first();

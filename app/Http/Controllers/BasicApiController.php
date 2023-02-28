@@ -13,7 +13,7 @@ class BasicApiController extends Controller
     public function __construct()
     {
         $this->shop_id    = shopId();
-        $this->sale_point = salePoint();
+        $this->sale_point = salePointId();
     }
 
     /**

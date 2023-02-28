@@ -15,7 +15,7 @@ class SettingsResource extends JsonResource
      */
     public function toArray($request)
     {
-        $sale = SalePoint::select('money_point', 'store_id')->with('store')->whereId(auth()->user()->sale_point ?? 0)->first();
+        $sale = SalePoint::select('money_point', 'store_id')->with('store')->whereId(salePointId())->first();
         return [
             'multi_price'          => $this->multi_price,
             'select_client'        => $this->select_client,

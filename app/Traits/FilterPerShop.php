@@ -11,12 +11,11 @@ trait FilterPerShop
         parent::boot();
 
         static::addGlobalScope('perShop', function (Builder $builder) {
-            $shop_id = auth()->user()->shop_id ?? 21036;
-            $builder->where('shop_id', $shop_id)->orderBy('id', 'desc');
+            $builder->where('shop_id', shopId())->orderBy('id', 'desc');
         });
 
         static::creating(function ($model) {
-            $model->shop_id = auth()->user()->shop_id;
+            $model->shop_id = shopId();
         });
     }
 }

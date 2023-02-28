@@ -73,7 +73,7 @@ class User extends Authenticatable
 
         static::addGlobalScope('perShop', function (Builder $builder) {
             $builder->when(auth()->user(), function ($query) {
-                $query->where('shop_id', auth()->user()->shop_id);
+                $query->where('shop_id', shopId());
             });
         });
     }
