@@ -58,21 +58,22 @@ class InvoiceController extends BasicApiController
     {
         $shop = Badrshop::select('currency', 'bill_adds')->where('serial_id', shopId())->first();
 
-        $bill = Invoice::select('id', 'bill_no', 'sale_date', 'net_price', 'local_bill_no', 'client_id', 'payment', 'discount', 'discount_type')
+        $bill = Invoice::select('id', 'bill_no', 'invoice_date', 'net_price', 'local_bill_no', 'client_id', 'payment', 'invoice_total_disc', 'invoice_total_disc_type')
                                 ->with('client', 'details')->where('id', $id)->first();
 
         if (! $bill) return $this->sendError('This bill not found');
 
-        $bill->adds = $this->getBillAdds($shop);
+        $bill->discount = $bill->invoice_total_disc > 0 ? ($bill->invoice_total_disc . ' ' . ($bill->invoice_total_disc_type ? " $shop->currency " : ' % ')) : '0';
+        $bill->adds = $this->getBillAdds($shop, $id);
 
         return $this->sendResponse(result: ['data' => $bill]);
     }
 
-    protected function getBillAdds($shop)
+    protected function getBillAdds($shop, $id)
     {
         $adds = [];
         if ($shop->bill_adds == 0) {
-            $rows = BillAddHistory::select('addition_value', 'bill_add', 'add_type', 'addition_id')->with('addition')->get();
+            $rows = BillAddHistory::select('addition_value', 'bill_add', 'add_type', 'addition_id')->where('bill_id', $id)->with('addition')->get();
             foreach ($rows as $row) {
                 $adds[] = [
                     'name' => $row->addition->name,

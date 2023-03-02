@@ -8,6 +8,7 @@ use App\Http\Resources\ClientsResource;
 use App\Http\Services\ClientService;
 use App\Models\Badrshop;
 use App\Models\Client;
+use App\Models\ClientsGroup;
 
 class ClientController extends GeneralApiController
 {
@@ -16,14 +17,25 @@ class ClientController extends GeneralApiController
         parent::__construct(Client::class, ClientsResource::class);
     }
 
+    public function clientsGroups()
+    {
+        $groups = ClientsGroup::select('id', 'name', 'group_discount')->when(auth()->user()->clients_group != 0, function ($query) {
+                                    $query->where('id', auth()->user()->clients_group);
+                                })->get()->toArray();
+        $clients = (new ClientController)->query()->get();
+        $response = ['groups' => $groups, 'clients' => ClientsResource::collection($clients)];
+        return $this->sendResponse(result: $response);
+    }
+
     public function store(ClientRequest $request)
     {
         $allow_lines = Badrshop::select('allow_lines')->where('serial_id', shopId())->first()->allow_lines;
         if ($allow_lines && ! auth()->user()->line) return $this->sendError('لا يمكن اضافة عميل لعدم وجود خط');
         $validated_data = array_merge($request->validated(), ['check_to_create_line' => $allow_lines && ! auth()->user()->line]);
         $row = new ClientService($validated_data);
-        return $row
-            ? $this->sendResponse('Client created successfully', ['data' => new $this->resource($row)])
+
+        return $row->client
+            ? $this->sendResponse('Client created successfully', ['data' => new $this->resource($row->client)])
             : $this->sendError('Error try again');
     }
 

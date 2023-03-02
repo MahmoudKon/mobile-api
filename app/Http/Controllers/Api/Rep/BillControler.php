@@ -6,6 +6,7 @@ use App\Http\Controllers\BasicApiController;
 use App\Http\Requests\Api\InvoiceRequest;
 use App\Models\Badrshop;
 use App\Models\BillAdd;
+use App\Models\Client;
 use App\Models\SalePoint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

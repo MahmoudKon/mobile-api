@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Api\Rep;
 
 use App\Http\Controllers\BasicApiController;
-use App\Http\Resources\ClientsResource;
 use App\Http\Resources\SettingsResource;
 use App\Models\Badrshop;
 use App\Models\City;
-use App\Models\ClientsGroup;
 use App\Models\PriceList;
 use App\Models\SalePoint;
 
@@ -34,15 +32,5 @@ class GeneralListController extends BasicApiController
     {
         $rows = SalePoint::query()->select('id', 'point_name as name')->get()->toArray();
         return $this->returnData($rows);
-    }
-
-    public function clientsGroups()
-    {
-        $groups = ClientsGroup::select('id', 'name', 'group_discount')->when(auth()->user()->clients_group != 0, function ($query) {
-                                    $query->where('id', auth()->user()->clients_group);
-                                })->get()->toArray();
-        $clients = (new ClientController)->query()->get();
-        $response = ['groups' => $groups, 'clients' => ClientsResource::collection($clients)];
-        return $this->sendResponse(result: $response);
     }
 }

@@ -17,46 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-
-
-
-
-// <?php
-
-// /*
-// |--------------------------------------------------------------------------
-// | Application Routes
-// |--------------------------------------------------------------------------
-// |
-// | Here is where you can register all of the routes for an application.
-// | It's a breeze. Simply tell Laravel the URIs it should respond to
-// | and give it the controller to call when that URI is requested.
-// |
-// */
-// //        Route::post('add-client', 'Rep\ClientController@store');
-
-
-
-// Route::get('/', function () {
-//     $databaseName = \DB::connection()->getDatabaseName();
-
-
-//     dd($databaseName);
-
-//     dd('email');
-
-// //    // return view('welcome');
-// //
-// //    return Request::url();
-// });
-
-// Route::group(['prefix' => 'api/v1'], function () {
-// //    Route::post('login', function () {
-// //        dd('email');
-// //   });
-//     Route::post('login', 'Rep\AuthController@login');
-//     Route::group(['middleware' => 'auth:rep'], function () {
+//         Route::post('login', 'Rep\AuthController@login');                        DONE
 //         Route::get('units', 'Rep\UnitController@index');                         DONE
 //         Route::post('add-unit', 'Rep\UnitController@store');                     DONE
 //         Route::get('edit-unit/{id}', 'Rep\UnitController@edit');                 DONE
@@ -85,6 +46,12 @@ Route::get('/', function () {
 //         Route::post('bill-details', 'Rep\BillController@billDetails');           DONE  => make it get method and make bill id in url
 //         Route::get('back-bill-details', 'Rep\BackBillController@billDetails');   DONE
 //         Route::post('point-money-day', 'Rep\ReportController@pointMoneyDay');    DONE
+//         Route::get('clients', 'Rep\ClientController@index');                     DONE
+//         Route::post('add-client', 'Rep\ClientController@store');                 DONE
+//         Route::post('/clients/{id}', 'Rep\ClientController@update');             DONE
+//         Route::post('clients-group', 'Rep\ClientController@clientsGroup');       DONE  => make it get method
+//         Route::get('balance-sheet', 'Rep\ClientController@balanceSheet');        DONE => Add client_id as pram balance-sheet/{client}
+//         Route::post('new-receipt', 'Rep\ClientController@receipts');
 
 
 
@@ -92,25 +59,8 @@ Route::get('/', function () {
 //         Route::post('new-bill', 'Rep\BillController@newBill');
 //         Route::post('new-back-bill', 'Rep\BackBillController@newBackBill');
 
-
-//         Route::get('clients', 'Rep\ClientController@index');
-//         Route::post('new-receipt', 'Rep\ClientController@receipts');
-//         Route::get('balance-sheet', 'Rep\ClientController@balanceSheet');
-//         Route::post('add-client', 'Rep\ClientController@store');
-//         Route::post('clients-group', 'Rep\ClientController@clientsGroup');
-        
-//         Route::post('/clients/{id}', 'Rep\ClientController@update');
-        
 //         Route::group(['middleware' => 'lines'], function () {
-//             // Route::post('/lines/create', 'Rep\LineController@store');
 //             Route::get('/lines/clients', 'Rep\ClientController@getLineClients');
-//             // Route::post('/lines/clients', 'Rep\ClientController@updateLineClients');
-//             // Route::post('/lines/clients/exceptional_visitation', 'Rep\ClientVisitController@store');
 //         });
 
 //         Route::get('clients/{id}/balance-sheet-excel', 'Rep\ClientController@balanceSheetExcel');
-
-//     });
-        
-
-// });

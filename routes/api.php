@@ -39,7 +39,6 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
             Route::get('settings', 'settings');
             Route::get('lists', 'prices');
             Route::get('cities', 'cities');
-            Route::get('clients-groups', 'clientsGroups');
             Route::get('sale-points', 'salePoints');
         });
 
@@ -57,6 +56,7 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
             Route::get('invoices/back-sales', 'backSales');
             Route::get('invoices/purchases', 'purchases');
             Route::get('invoices/back-purchases', 'backPurchases');
+            Route::get('invoices/{id}', 'show');
             Route::get('invoices/additions', 'additions');
         });
 
@@ -64,11 +64,17 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
         Route::get('expenses-terms', 'SpendController@index');
         Route::post('new-expenses', 'SpendController@store');
 
-
-
-        Route::post('client/receipts', 'ClientReceiptController@store');
-        Route::get('client/{client_id}/receipts', 'ClientReceiptController@index');
-        Route::apiResource('clients', 'ClientController');
+        Route::get('balance-sheet/{client}', 'ClientReceiptController@index');
+        Route::post('new-receipt', 'ClientReceiptController@store');
+        // Route::apiResource('clients', 'ClientController');
+        Route::controller('ClientController')->group(function () {
+            Route::get('clients', 'index');
+            Route::post('add-client', 'store');
+            Route::get('clients/{client}', 'show');
+            Route::post('clients/{client}', 'update');
+            Route::get('clients-group', 'clientsGroups');
+        });
+        
 
         Route::get('point-money-day', 'ReportController@index');
 
