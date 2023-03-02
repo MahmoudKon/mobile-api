@@ -17,10 +17,12 @@ class ClientTransactionResource extends JsonResource
         return [
             'id'                => $this->id,
             'date'              => $this->pay_day,
+            'bill_no'           => $this->invoice->bill_no,
             'expense'           => $this->effect == 0 ? $this->amount : '',
             'income'            => $this->effect == 1 ? $this->amount : '',
             'remaining_balance' => $this->safe_balance,
             'user_name'         => $this->user->user_name ?? '',
+            'client_name'       => $this->client->name ?? '',
             'details'           => getTypeName($this->type),
         ];
     }

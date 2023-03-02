@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Traits\FilterPerShop;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ClientTransaction extends Model
@@ -35,6 +34,6 @@ class ClientTransaction extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class)->select('id', 'user_name')->withDefault(['id' => '', 'user_name' => '']);
+        return $this->belongsTo(User::class, 'user_id')->select('id', 'user_name')->withDefault(['id' => '', 'user_name' => '']);
     }
 }

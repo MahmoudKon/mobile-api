@@ -9,15 +9,15 @@ use App\Models\ClientTransaction;
 use App\Models\SalePoint;
 use App\Models\Spending;
 use App\Models\SpendItem;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class SpendController extends BasicApiController
 {
     public function index()
     {
-        $rows = Spending::select('id', 'spend_id', 'spend_date', 'amount', 'note')->with('spendItem')->get();
-        return $this->returnData(SpendingResource::collection($rows));
+        $rows = SpendItem::select('id', 'name')->get()->toArray();
+        return $this->returnData($rows);
     }
 
     public function store(SpendRequest $request)

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Api\Rep;
 
-use App\Http\Controllers\BasicApiController;
 use App\Http\Controllers\GeneralApiController;
+use App\Http\Resources\ItemPricesResource;
 use App\Http\Resources\ItemsResource;
 use App\Models\Item;
+use App\Models\ItemPrice;
 use App\Models\SalePoint;
 
 class ItemController extends GeneralApiController
@@ -14,6 +15,21 @@ class ItemController extends GeneralApiController
     {
         parent::__construct(Item::class, ItemsResource::class);
     }
+
+    public function items2()
+    {
+        $rows = $this->query()->get();
+        return $rows->count()
+            ? $this->sendResponse(result: ['data' => $this->resource::collection($rows)])
+            : $this->sendError('no data found');
+    }
+
+    public function itemsPrices()
+    {
+        $rows = ItemPrice::query()->select('id', 'shop_id', 'price', 'list_quant', 'item_id', 'list_id')->with('item', 'list')->get();
+        return $this->returnData(ItemPricesResource::collection($rows));
+    }
+
 
     public function query(?int $id = null): \Illuminate\Database\Eloquent\Builder
     {

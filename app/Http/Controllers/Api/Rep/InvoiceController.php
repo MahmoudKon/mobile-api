@@ -10,7 +10,6 @@ use App\Models\Badrshop;
 use App\Models\BillAdd;
 use App\Models\BillAddHistory;
 use App\Models\Invoice;
-use App\Models\SaleBackInvoice;
 use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends BasicApiController
@@ -38,7 +37,7 @@ class InvoiceController extends BasicApiController
     public function query(int $type = 1)
     {
         return Invoice::select('id', 'bill_no', 'client_id', 'invoice_date', 'net_price', 'local_bill_no')->with('client')->where('invoice_type', $type)
-                ->withCount('details')->whereDate('invoice_date', request()->get('date', date('Y-m-d')))->get();
+                ->withCount('details')->with('client')->whereDate('invoice_date', request()->get('date', date('Y-m-d')))->get();
     }
 
     public function additions()
@@ -59,7 +58,7 @@ class InvoiceController extends BasicApiController
     {
         $shop = Badrshop::select('currency', 'bill_adds')->where('serial_id', shopId())->first();
 
-        $bill = SaleBackInvoice::select('id', 'bill_no', 'sale_date', 'net_price', 'local_bill_no', 'client_id', 'payment', 'discount', 'discount_type')
+        $bill = Invoice::select('id', 'bill_no', 'sale_date', 'net_price', 'local_bill_no', 'client_id', 'payment', 'discount', 'discount_type')
                                 ->with('client', 'details')->where('id', $id)->first();
 
         if (! $bill) return $this->sendError('This bill not found');

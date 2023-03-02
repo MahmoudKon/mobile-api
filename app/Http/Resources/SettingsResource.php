@@ -19,21 +19,20 @@ class SettingsResource extends JsonResource
         return [
             'multi_price'          => $this->multi_price,
             'select_client'        => $this->select_client,
-            'sale_cash'            => $this->sale_cash,
+            'check_lowest_price'   => $this->check_lowest_price,
             'tracking'             => $this->tracking,
-            'bill_in_location'     => $this->bill_in_location,
+            'bill_in_location'     => $this->make_bill,
             'logo'                 => $this->logo_path,
             'company_ratio'        => $this->company_ratio,
             'sale_details'         => $this->sale_details,
             'bill_adds'            => $this->bill_adds,
-            'sale_details'         => $this->sale_details,
             'allow_lines'          => $this->allow_lines,
             'point_balance'        => $sale?->money_point,
+            'store_name'           => $sale?->store?->name,
             'can_edit_client_days' => auth()->user()->can_edit_client_days ?? 0,
             'show_pay_price'       => auth()->user()->show_pay_price ?? 0,
             'sale_cash'            => auth()->user()->sale_cash ?? 0,
             'sale_discount'        => auth()->user()->sale_discount ?? 0,
-            'store_name'           => $sale?->store->name,
         ];
     }
 }

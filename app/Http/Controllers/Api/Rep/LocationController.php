@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers\Api\Rep;
 
-use App\Http\Controllers\BasicApiController;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\GeneralApiController;
 use App\Http\Requests\Api\LocationRequest;
 use App\Http\Resources\LocationsResource;
 use App\Models\Location;
-use Illuminate\Http\Request;
 
 class LocationController extends GeneralApiController
 {

@@ -11,15 +11,46 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
     });
 
     Route::namespace('Rep')->group(function () {
+        // Route::apiResource('units', 'UnitController');
+        Route::controller('UnitController')->group(function () {
+            Route::get('units', 'index');
+            Route::post('add-unit', 'store');
+            Route::get('edit-unit/{unit}', 'show');
+            Route::post('update-unit/{unit}', 'update');
+            Route::post('delete-unit/{unit}', 'destroy');
+        });
+
+        // Route::apiResource('categories', 'ItemTypeController');
+        Route::controller('ItemTypeController')->group(function () {
+            Route::get('categories', 'index');
+            Route::post('add-category', 'store');
+            Route::get('edit-category/{item_type}', 'show');
+            Route::post('update-category/{item_type}', 'update');
+            Route::post('delete-category/{item_type}', 'destroy');
+        });
+
+        // Route::apiResource('locations', 'LocationController');
+        Route::controller('LocationController')->group(function () {
+            Route::get('locations', 'index');
+            Route::post('new-location', 'store');
+        });
+
         Route::controller('GeneralListController')->group(function () {
             Route::get('settings', 'settings');
-            Route::get('list-prices', 'prices');
-            Route::get('item-prices', 'itemsPrices');
+            Route::get('lists', 'prices');
             Route::get('cities', 'cities');
             Route::get('clients-groups', 'clientsGroups');
             Route::get('sale-points', 'salePoints');
-            Route::get('expenses-terms', 'expensesTerms');
         });
+
+        // Route::apiResource('items', 'ItemController');
+        Route::controller('ItemController')->group(function () {
+            Route::get('items-prices', 'itemsPrices');
+            Route::get('items', 'index');
+            Route::get('items2', 'items2');
+
+        });
+
 
         Route::controller('InvoiceController')->group(function () {
             Route::get('invoices/sales', 'sales');
@@ -29,16 +60,11 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
             Route::get('invoices/additions', 'additions');
         });
 
-        Route::get('expenses', 'SpendController@index');
-        Route::post('expenses', 'SpendController@store');
 
-        Route::apiResource('item-types', 'ItemTypeController');
+        Route::get('expenses-terms', 'SpendController@index');
+        Route::post('new-expenses', 'SpendController@store');
 
-        Route::apiResource('units', 'UnitController');
 
-        Route::apiResource('locations', 'LocationController');
-
-        Route::apiResource('items', 'ItemController');
 
         Route::post('client/receipts', 'ClientReceiptController@store');
         Route::get('client/{client_id}/receipts', 'ClientReceiptController@index');

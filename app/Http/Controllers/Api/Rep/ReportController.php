@@ -6,7 +6,6 @@ use App\Http\Controllers\BasicApiController;
 use App\Http\Resources\ClientTransactionResource;
 use App\Models\ClientTransaction;
 use App\Models\SalePoint;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ReportController extends BasicApiController
@@ -16,7 +15,7 @@ class ReportController extends BasicApiController
         $p_scale = DB::table('badr_shop')->select('decimal_num_price')->where('serial_id', shopId())->first()->decimal_num_price;
         $date = request()->get('date', date('Y-m-d'));
 
-        $rows = ClientTransaction::select('id', 'pay_day', 'effect', 'type', DB::raw("TRUNCATE(amount, $p_scale) as amount"), 'user_id', 'safe_balance')->with('user')
+        $rows = ClientTransaction::select('id', 'pay_day', 'effect', 'bill_id', 'type', DB::raw("TRUNCATE(amount, $p_scale) as amount"), 'user_id', 'client_id', 'safe_balance')->with('user', 'client', 'invoice')
                             ->where('pay_day', $date)->where('amount', '>', 0)->get();
 
         if (count($rows) == 0) return $this->sendError('No Data Found');
@@ -39,7 +38,7 @@ class ReportController extends BasicApiController
         $prev->effect = 2;
         $prev->safe_balance = number_format($previous_balance, $p_scale);
         $prev->type = 101;
-        $prev->user = "";
+        $prev->user = '';
         return $prev;
     }
 }
