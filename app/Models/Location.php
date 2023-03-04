@@ -21,12 +21,12 @@ class Location extends Model
         parent::boot();
 
         static::addGlobalScope('perShop', function (Builder $builder) {
-            $builder->where('shop_id', shopId())->where('user_id', auth()->id())->orderBy('id', 'desc');
+            $builder->where('shop_id', shopId())->where('user_id', authId())->orderBy('id', 'desc');
         });
 
         static::creating(function ($model) {
             $model->shop_id = shopId();
-            $model->user_id = auth()->id();
+            $model->user_id = authId();
         });
     }
 }

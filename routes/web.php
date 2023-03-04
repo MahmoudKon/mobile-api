@@ -51,7 +51,7 @@ Route::get('/', function () {
 //         Route::post('/clients/{id}', 'Rep\ClientController@update');             DONE
 //         Route::post('clients-group', 'Rep\ClientController@clientsGroup');       DONE  => make it get method
 //         Route::get('balance-sheet', 'Rep\ClientController@balanceSheet');        DONE => Add client_id as pram balance-sheet/{client}
-//         Route::post('new-receipt', 'Rep\ClientController@receipts');
+//         Route::post('new-receipt', 'Rep\ClientController@receipts');             DONE
 
 
 

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Spending extends Model
@@ -27,8 +26,8 @@ class Spending extends Model
 
         static::creating(function ($model) {
             $model->shop_id   = shopId();
-            $model->add_user  = auth()->id();
-            $model->edit_user = auth()->id();
+            $model->add_user  = authId();
+            $model->edit_user = authId();
             $model->edit_date = now();
             $model->add_date  = now();
         });

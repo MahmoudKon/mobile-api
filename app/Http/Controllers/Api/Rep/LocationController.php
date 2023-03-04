@@ -18,7 +18,7 @@ class LocationController extends GeneralApiController
     {
         $rows = [];
         foreach ($request->validated('details') as $row)
-            $rows[] = array_merge($row, ['shop_id' => shopId(), 'user_id' => auth()->id()]);
+            $rows[] = array_merge($row, ['shop_id' => shopId(), 'user_id' => authId()]);
         $this->model::insert($rows);
         return $this->returnData($rows);
     }

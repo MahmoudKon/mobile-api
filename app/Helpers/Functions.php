@@ -1,14 +1,26 @@
 <?php
 
+if ( !function_exists( 'authUser' ) ) {
+    function authUser() {
+        return auth()->user();
+    }
+}
+
+if ( !function_exists( 'authId' ) ) {
+    function authId() {
+        return auth()->id();
+    }
+}
+
 if ( !function_exists( 'shopId' ) ) {
     function shopId() {
-        return auth()->user()->shop_id ?? null;
+        return authUser()->shop_id ?? null;
     }
 }
 
 if ( !function_exists( 'salePointId' ) ) {
     function salePointId() {
-        return auth()->user()->sale_point ?? null;
+        return authUser()->sale_point ?? null;
     }
 }
 

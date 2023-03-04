@@ -29,10 +29,10 @@ class SettingsResource extends JsonResource
             'allow_lines'          => $this->allow_lines,
             'point_balance'        => $sale?->money_point,
             'store_name'           => $sale?->store?->name,
-            'can_edit_client_days' => auth()->user()->can_edit_client_days ?? 0,
-            'show_pay_price'       => auth()->user()->show_pay_price ?? 0,
-            'sale_cash'            => auth()->user()->sale_cash ?? 0,
-            'sale_discount'        => auth()->user()->sale_discount ?? 0,
+            'can_edit_client_days' => authUser()->can_edit_client_days ?? 0,
+            'show_pay_price'       => authUser()->show_pay_price ?? 0,
+            'sale_cash'            => authUser()->sale_cash ?? 0,
+            'sale_discount'        => authUser()->sale_discount ?? 0,
         ];
     }
 }

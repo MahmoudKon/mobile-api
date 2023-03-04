@@ -19,8 +19,8 @@ class ClientController extends GeneralApiController
 
     public function clientsGroups()
     {
-        $groups = ClientsGroup::select('id', 'name', 'group_discount')->when(auth()->user()->clients_group != 0, function ($query) {
-                                    $query->where('id', auth()->user()->clients_group);
+        $groups = ClientsGroup::select('id', 'name', 'group_discount')->when(authUser()->clients_group != 0, function ($query) {
+                                    $query->where('id', authUser()->clients_group);
                                 })->get()->toArray();
         $clients = (new ClientController)->query()->get();
         $response = ['groups' => $groups, 'clients' => ClientsResource::collection($clients)];
@@ -30,8 +30,8 @@ class ClientController extends GeneralApiController
     public function store(ClientRequest $request)
     {
         $allow_lines = Badrshop::select('allow_lines')->where('serial_id', shopId())->first()->allow_lines;
-        if ($allow_lines && ! auth()->user()->line) return $this->sendError('لا يمكن اضافة عميل لعدم وجود خط');
-        $validated_data = array_merge($request->validated(), ['check_to_create_line' => $allow_lines && ! auth()->user()->line]);
+        if ($allow_lines && ! authUser()->line) return $this->sendError('لا يمكن اضافة عميل لعدم وجود خط');
+        $validated_data = array_merge($request->validated(), ['check_to_create_line' => $allow_lines && ! authUser()->line]);
         $row = new ClientService($validated_data);
 
         return $row->client
@@ -51,8 +51,8 @@ class ClientController extends GeneralApiController
     {
         return $this->model::query()->selectRaw('id, client_name, tele, client_tax_number, shop_id, address, group_id, FORMAT(balance, 2) as balance, lat, lon, price_list_id')
                             ->when($id, fn($q) => $q->where('id', $id))
-                            ->when(auth()->user()->clients_group, function ($query) {
-                                $query->where('group_id', auth()->user()->clients_group);
+                            ->when(authUser()->clients_group, function ($query) {
+                                $query->where('group_id', authUser()->clients_group);
                             });
     }
 

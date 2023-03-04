@@ -222,7 +222,7 @@ class BackBillService
                     //     'sale_id' => 0,
                     //     'back_id' => $bill_id,
                     //     'store_id' => $user_store,
-                    //     'user_id' => auth()->id(),
+                    //     'user_id' => authId(),
                     //     'shop_id' => $this->shop_id
                     // ];
 //             }
@@ -234,7 +234,7 @@ class BackBillService
                 // $this->clients_transactions [$index] = [
                 //     'shop_id' => $this->shop_id,
                 //     'client_id' => $client_id,
-                //     'user_id' => auth()->id(),
+                //     'user_id' => authId(),
                 //     'amount' => $net,
                 //     'type' => 0,
                 //     'effect' => 0,

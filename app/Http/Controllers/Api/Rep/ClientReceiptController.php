@@ -47,7 +47,7 @@ class ClientReceiptController extends BasicApiController
                         'effect'        => $effect,
                         'pay_day'       => Carbon::parse($detail['date']),
                         'balance'       => $client->balance,
-                        'user_id'       => auth()->id(),
+                        'user_id'       => authId(),
                         'shop_id'       => shopId(),
                         'safe_point_id' => $user_sale_point->id,
                         'safe_balance'  => $user_sale_point->money_point,

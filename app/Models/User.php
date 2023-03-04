@@ -72,7 +72,7 @@ class User extends Authenticatable
         parent::boot();
 
         static::addGlobalScope('perShop', function (Builder $builder) {
-            $builder->when(auth()->user(), function ($query) {
+            $builder->when(authUser(), function ($query) {
                 $query->where('shop_id', shopId());
             });
         });

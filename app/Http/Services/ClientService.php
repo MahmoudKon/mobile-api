@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 class ClientService
 {
     public Client $client;
+    public array $transaction;
 
     public function __construct(protected array $validated)
     {
@@ -30,11 +31,11 @@ class ClientService
                 'city_id'           => 0,
                 'StorePass'         => 'empty',
                 'shop_id'           => shopId(),
-                'add_user'          => auth()->id(),
-                'edit_user'         => auth()->id(),
-                'price_list_id'     => auth()->id(),
+                'add_user'          => authId(),
+                'edit_user'         => authId(),
+                'price_list_id'     => authId(),
                 'add_date'          => now(),
-                'group_id'          => auth()->user()->clients_group,
+                'group_id'          => authUser()->clients_group,
                 'api_token'         => ' ',
             ]));
 
@@ -67,7 +68,7 @@ class ClientService
     protected function createLine()
     {
         if ( !$this->validated['check_to_create_line'] ) return $this;
-        $data = ['line_id'   => auth()->user()->line->id, 'client_id' => $this->client->id];
+        $data = ['line_id'   => authUser()->line->id, 'client_id' => $this->client->id];
 
         if (request()->has('days')) {
             foreach (request()->days as $day) $data[$day] = true;

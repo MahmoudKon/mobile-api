@@ -15,13 +15,13 @@ class UserController extends BasicApiController
 
     public function profile(): \Illuminate\Http\JsonResponse
     {
-        auth()->user()->load('shop', 'salePoint');
-        return $this->sendResponse('', ['data' => new UsersResource(auth()->user())]);
+        authUser()->load('shop', 'salePoint');
+        return $this->sendResponse('', ['data' => new UsersResource(authUser())]);
     }
 
     public function logout(): \Illuminate\Http\JsonResponse
     {
-        auth()->user()->tokens()->delete();
+        authUser()->tokens()->delete();
         return $this->sendResponse('User Logged out');
     }
 }
