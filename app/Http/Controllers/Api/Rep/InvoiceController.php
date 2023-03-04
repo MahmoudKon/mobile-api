@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Rep;
 use App\Http\Controllers\BasicApiController;
 use App\Http\Requests\Api\InvoiceRequest;
 use App\Http\Resources\InvoicesResource;
-use App\Http\Services\BackBillService;
+use App\Http\Services\InvoiceService;
 use App\Models\Badrshop;
 use App\Models\BillAdd;
 use App\Models\BillAddHistory;
@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends BasicApiController
 {
+    public function additions()
+    {
+        $p_scale = Badrshop::select('decimal_num_price')->where('serial_id', $this->shop_id)->first()->decimal_num_price;
+        $rows = BillAdd::select('id', 'addition_name as name', 'check_addition as type', DB::raw("TRUNCATE(addition_value, $p_scale) as value"))->whereIn('add_role', [0, 1])->where('check_bill_type', '!=', 2)->get()->toArray();
+        return $this->returnData($rows);
+    }
+
     public function sales()
     {
         return $this->returnData(InvoicesResource::collection( $this->query(1) ));
@@ -40,14 +47,7 @@ class InvoiceController extends BasicApiController
                 ->withCount('details')->with('client')->whereDate('invoice_date', request()->get('date', date('Y-m-d')))->get();
     }
 
-    public function additions()
-    {
-        $p_scale = Badrshop::select('decimal_num_price')->where('serial_id', $this->shop_id)->first()->decimal_num_price;
-        $rows = BillAdd::select('id', 'addition_name as name', 'check_addition as type', DB::raw("TRUNCATE(addition_value, $p_scale) as value"))->whereIn('add_role', [0, 1])->where('check_bill_type', '!=', 2)->get()->toArray();
-        return $this->returnData($rows);
-    }
-
-    public function store(InvoiceRequest $request, BackBillService $service)
+    public function store(InvoiceRequest $request, InvoiceService $service)
     {
         $response = $service->handler($request->validated());
         if ($response['status'] == 200) return $this->sendResponse(result: $response['data']);

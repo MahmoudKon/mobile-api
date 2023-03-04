@@ -27,18 +27,18 @@ class InvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'bills'                     => 'required|array|min:1',
-            'bills.*.client_id'         => "required|exists:clients,id,shop_id,".shopId(),
-            'bills.*.date_time'         => 'required|date_format:Y-m-d h:i:s A',
-            'bills.*.local_bill_no'     => 'required|numeric',
-            'bills.*.sale_details'      => 'required|array|min:1',
-            'sale_details.*.quantity'   => 'required|numeric|min:1',
-            'sale_details.*.item_id'    => "required|exists:items,id,shop_id,".shopId(),
-            'sale_details.*.unit_id'    => "exists:units,id,shop_id,".shopId(),
-            'bills.*.pay_method'        => 'required|numeric|in:0,1',
-            'bills.*.discount_type'     => 'required|numeric|in:0,1',
-            'bills.*.payment'           => 'required|numeric|min:1',
-            'bills.*.discount'          => 'required|numeric|min:0',
+            'bills'                           => 'required|array|min:1',
+            'bills.*.client_id'               => "required|exists:clients,id,shop_id,".shopId(),
+            'bills.*.date_time'               => 'required|date_format:Y-m-d h:i:s A',
+            'bills.*.local_bill_no'           => 'required|numeric',
+            'bills.*.sale_details'            => 'required|array|min:1',
+            'bills.*.sale_details.*.quantity' => 'required|numeric|min:1',
+            'bills.*.sale_details.*.item_id'  => "required|exists:items,id,shop_id,".shopId(),
+            'bills.*.sale_details.*.unit_id'  => "required|exists:units,id,shop_id,".shopId(),
+            'bills.*.pay_method'              => 'required|numeric|in:0,1',
+            'bills.*.discount_type'           => 'required|numeric|in:0,1',
+            'bills.*.payment'                 => 'required|numeric|min:1',
+            'bills.*.discount'                => 'required|numeric|min:0',
         ];
     }
 }

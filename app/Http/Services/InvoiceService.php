@@ -6,7 +6,7 @@ use App\Models\ClientTransaction;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
-class BackBillService
+class InvoiceService
 {
     protected int $shop_id;
     protected array $validated_data = [];
@@ -20,6 +20,7 @@ class BackBillService
 
     public function handler(array $data = [])
     {
+        dd($data);
         try {
             DB::beginTransaction();
                 return ['status' => 200, 'data' => $this->calculate($data)];
