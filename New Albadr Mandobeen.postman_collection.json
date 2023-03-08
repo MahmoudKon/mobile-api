@@ -1528,20 +1528,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/invoices/2733",
+							"raw": "{{url}}/invoices/11",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"invoices",
-								"2733"
+								"11"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Store",
+					"name": "New Bill",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -1557,7 +1557,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"bills\": [\n        {\n            \"client_id\": 671,\n            \"date_time\": \"2023-03-03 09:40:20 PM\",\n            \"local_bill_no\": 5,\n            \"sale_details\": [\n                {\n                    \"quantity\": 4,\n                    \"item_id\": 147,\n                    \"unit_id\": 58\n                }\n            ],\n            \"pay_method\": 1,\n            \"discount_type\": 1,\n            \"discount\": 0,\n            \"payment\": 2000\n        },\n        {\n            \"client_id\": 671,\n            \"date_time\": \"2023-03-03 10:20:20 PM\",\n            \"local_bill_no\": 3,\n            \"sale_details\": [\n                {\n                    \"quantity\": 2,\n                    \"item_id\": 148,\n                    \"unit_id\": 61\n                },\n                {\n                    \"quantity\": 2,\n                    \"item_id\": 147,\n                    \"unit_id\": 58\n                }\n            ],\n            \"pay_method\": 1,\n            \"discount_type\": 1,\n            \"discount\": 0,\n            \"payment\": 2000\n        }\n    ]\n}",
+							"raw": "{\n    \"bills\": [\n        {\n            \"invoice_type\": 1,\n            \"clientBalance\": 0.0000,\n            \"clientName\": \"Mahmoud Mohammed\",\n            \"client_id\": 85,\n            \"date\": \"2023-03-07\",\n            \"date_time\": \"2023-03-07 11:15:33 AM\",\n            \"discount\": 3,\n            \"discountCashValue\": 3,\n            \"discount_type\": 1,\n            \"local_bill_no\": \" 2\",\n            \"net\": 200,\n            \"newClientBalance\": 56035.07,\n            \"pay_method\": 0,\n            \"payment\": 0,\n            \"sale_details\": [\n                {\n                    \"item_id\": 115,\n                    \"price\": 200.0000,\n                    \"quantity\": 3,\n                    \"unitName\": \"علبة\",\n                    \"unitValue\": 1,\n                    \"unit_id\": 43\n                }\n            ],\n            \"sale_point\": 2,\n            \"time\": \"2023-03-07 11:15:33 AM\",\n            \"total\": 197,\n            \"updated\": 0\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1565,12 +1565,48 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/invoices",
+							"raw": "{{url}}/new-bill",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"invoices"
+								"new-bill"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Back Bill",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bills\": [\n        {\n            \"clientBalance\": 0.0000,\n            \"clientName\": \"Mahmoud Mohammed\",\n            \"client_id\": 85,\n            \"date\": \"2023-03-07\",\n            \"date_time\": \"2023-03-07 11:15:33 AM\",\n            \"discount\": 3,\n            \"discountCashValue\": 3,\n            \"discount_type\": 1,\n            \"local_bill_no\": \" 2\",\n            \"net\": 200,\n            \"newClientBalance\": 56035.07,\n            \"pay_method\": 0,\n            \"payment\": 0,\n            \"sale_details\": [\n                {\n                    \"item_id\": 115,\n                    \"price\": 200.0000,\n                    \"quantity\": 3,\n                    \"unitName\": \"علبة\",\n                    \"unitValue\": 1,\n                    \"unit_id\": 43\n                }\n            ],\n            \"sale_point\": 2,\n            \"time\": \"2023-03-07 11:15:33 AM\",\n            \"total\": 197,\n            \"updated\": 0\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/new-back-bill",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"new-back-bill"
 							]
 						}
 					},
