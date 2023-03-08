@@ -61,6 +61,8 @@ class InvoiceService
             $this->client->increment('balance', $bill['total']);
         else
             $this->client->decrement('balance', $bill['total']);
+
+        $this->client->refresh();
     }
 
     protected function updateSalePointBalance(array $bill): void
@@ -69,6 +71,8 @@ class InvoiceService
             $this->salePoint->increment('money_point', $bill['total']);
         else
             $this->salePoint->decrement('money_point', $bill['total']);
+        
+        $this->salePoint->refresh();
     }
 
     protected function createInvoice(array $bill): void
@@ -87,7 +91,7 @@ class InvoiceService
             'bill_total'                => $bill['total'],
             'payment'                   => $bill['payment'],
             'bill_payment'              => $bill['payment'],
-            'rest'                      => $bill['net'] - $bill['payment'],
+            'rest'                      => $bill['total'] - $bill['payment'],
             'balance'                   => $this->client->balance,
             'client_id'                 => $bill['client_id'],
             'add_user'                  => $bill['user_id'] ?? 0,
@@ -98,8 +102,8 @@ class InvoiceService
             'fee'                       => $bill['delivery_fees'] ?? 0,
             'fee_status'                => $this->shop->add_delivery_fees_to_the_cash_drawer,
             'sales_man'                 => 0,
-            'invoice_total_disc'        => 0,
-            'invoice_total_disc_type'   => 1,
+            'invoice_total_disc'        => $bill['discountCashValue'],
+            'invoice_total_disc_type'   => $bill['discount_type'],
             'bill_service_id'           => 0,
             'bill_service_value'        => 0,
             'delivery_option_id'        => 0,
@@ -121,7 +125,8 @@ class InvoiceService
             $item['real_quantity'] = $item['unitValue'] * $item['quantity'];
             $this->updateUnitQuantity($item);
             $this->createInvoiceDetails($item);
-            $this->createInvoiceItemVat($item_obj, $item);
+            if ($item_obj->vat_id !== 0)
+                $this->createInvoiceItemVat($item_obj, $item);
         }
 
         InvoiceDetails::insert($this->details);
