@@ -36,4 +36,19 @@ class Item extends Model
     {
         return $this->belongsToMany(Store::class,'store_items')->select('stores.id', 'stores.store_name as name')->withPivot('store_quant');
     }
+
+    public function itemStores()
+    {
+        return $this->hasMany(StoreItem::class, 'item_id', 'id')->select('id', 'store_quant', 'item_id', 'store_id');
+    }
+
+    public function itemUnit()
+    {
+        return $this->hasOne(ItemUnit::class, 'item_id', 'id')->select('id', 'unit_value', 'item_id', 'unit_price', 'item_id', 'unit_id');
+    }
+
+    public function addition()
+    {
+        return $this->belongsTo(BillAdd::class,'vat_id')->select('id', 'addition_value');
+    }
 }

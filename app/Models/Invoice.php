@@ -13,9 +13,14 @@ class Invoice extends Model
     protected $guarded = ['id'];
     public $timestamps = false;
 
+    const PURCHASES = 0;
+    const SALES = 1;
+    const BACK_PURCHASES = 2;
+    const BACK_SALES = 3;
+
     public function details()
     {
-        return $this->hasMany(InvoiceDetails::class, 'invoice_id', 'id');
+        return $this->hasMany(InvoiceDetails::class, 'invoice_id', 'id')->select('id', 'invoice_id', 'item_id', 'unit_id', 'quantity', 'quantity_after', 'sale_price')->with('item', 'unit');
     }
 
     public function client()

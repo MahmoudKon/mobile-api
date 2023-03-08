@@ -13,6 +13,16 @@ class InvoiceDetails extends Model
     protected $table = 'invoices_details';
     protected $guarded = ['id'];
     public $timestamps = false;
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class)->select('id', 'item_name');
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class)->select('id', 'name');
+    }
 }
 
 

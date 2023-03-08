@@ -23,22 +23,22 @@ class InvoiceController extends BasicApiController
 
     public function sales()
     {
-        return $this->returnData(InvoicesResource::collection( $this->query(1) ));
+        return $this->returnData(InvoicesResource::collection( $this->query( Invoice::SALES ) ));
     }
 
     public function backSales()
     {
-        return $this->returnData(InvoicesResource::collection( $this->query(3) ));
+        return $this->returnData(InvoicesResource::collection( $this->query( Invoice::BACK_SALES ) ));
     }
 
     public function purchases()
     {
-        return $this->returnData(InvoicesResource::collection( $this->query(0) ));
+        return $this->returnData(InvoicesResource::collection( $this->query( Invoice::PURCHASES ) ));
     }
 
     public function backPurchases()
     {
-        return $this->returnData(InvoicesResource::collection( $this->query(2) ));
+        return $this->returnData(InvoicesResource::collection( $this->query( Invoice::BACK_PURCHASES ) ));
     }
 
     public function query(int $type = 1)
@@ -47,10 +47,17 @@ class InvoiceController extends BasicApiController
                 ->withCount('details')->with('client')->whereDate('invoice_date', request()->get('date', date('Y-m-d')))->get();
     }
 
-    public function store(InvoiceRequest $request, InvoiceService $service)
+    public function newBill(InvoiceRequest $request, InvoiceService $service)
     {
-        $response = $service->handler($request->validated());
-        if ($response['status'] == 200) return $this->sendResponse(result: $response['data']);
+        $response = $service->handler($request->validated(), Invoice::SALES);
+        if ($response['status'] == 200) return $this->sendResponse();
+        return $this->sendError($response['message']);
+    }
+
+    public function newBackBill(InvoiceRequest $request, InvoiceService $service)
+    {
+        $response = $service->handler($request->validated(), Invoice::BACK_SALES);
+        if ($response['status'] == 200) return $this->sendResponse();
         return $this->sendError($response['message']);
     }
 

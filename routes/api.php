@@ -13,7 +13,6 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
     Route::namespace('Rep')->group(function () {
         Route::get('point-money-day', 'ReportController@index');
 
-
         Route::get('expenses-terms', 'SpendController@index');
         Route::post('new-expenses', 'SpendController@store');
 
@@ -63,13 +62,14 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
 
 
         Route::controller('InvoiceController')->group(function () {
-            Route::post('invoices', 'store');
             Route::get('invoices/additions', 'additions');
             Route::get('invoices/sales', 'sales');
             Route::get('invoices/back-sales', 'backSales');
             Route::get('invoices/purchases', 'purchases');
             Route::get('invoices/back-purchases', 'backPurchases');
             Route::get('invoices/{id}', 'show');
+            Route::post('new-bill', 'newBill');
+            Route::post('new-back-bill', 'newBackBill');
         });
 
 

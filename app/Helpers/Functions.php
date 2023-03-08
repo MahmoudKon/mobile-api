@@ -24,6 +24,13 @@ if ( !function_exists( 'salePointId' ) ) {
     }
 }
 
+if (!function_exists( 'day_now' )) {
+    function day_now($type) {
+        if ($type == 1) \Carbon\Carbon::setLocale('ar');
+        return \Carbon\Carbon::now()->format('Y-m-d H:i:s');
+    }
+}
+
 if (!function_exists( 'similarWords' ) ) {
     function similarWords(string $text): string
     {
