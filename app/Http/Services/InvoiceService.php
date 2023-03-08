@@ -58,9 +58,9 @@ class InvoiceService
     protected function updateClientBalance(array $bill): void
     {
         if ($this->type == Invoice::SALES)
-            $this->client->increment('balance', $bill['total']);
+            $this->client->increment('balance', $$bill['total'] - $bill['payment']);
         else
-            $this->client->decrement('balance', $bill['total']);
+            $this->client->decrement('balance', $$bill['total'] - $bill['payment']);
 
         $this->client->refresh();
     }
