@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\DB;
 
 class ClientReceiptController extends BasicApiController
 {
-    public function index($client_id)
+    public function index()
     {
-        $rows = ClientTransaction::select('id', 'amount', 'type', 'pay_day', 'balance', 'bill_id', 'client_id', 'date_time', 'notes')->perClient($client_id)->with('invoice', 'client')->whereIn('type', [0, 1, 2, 4, 8, 9])->get();
+        $rows = ClientTransaction::select('id', 'amount', 'type', 'pay_day', 'balance', 'bill_id', 'client_id', 'date_time', 'notes')->perClient(request()->get('client_id'))->with('invoice', 'client')->whereIn('type', [0, 1, 2, 4, 8, 9])->get();
         return $this->returnData(ClientReceiptResource::collection($rows));
     }
 

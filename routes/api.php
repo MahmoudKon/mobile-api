@@ -67,13 +67,13 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
             Route::get('invoices/back-sales', 'backSales');
             Route::get('invoices/purchases', 'purchases');
             Route::get('invoices/back-purchases', 'backPurchases');
-            Route::get('invoices/{id}', 'show');
+            Route::post('bill-details', 'show');
             Route::post('new-bill', 'newBill');
             Route::post('new-back-bill', 'newBackBill');
         });
 
 
-        Route::get('balance-sheet/{client}', 'ClientReceiptController@index');
+        Route::get('balance-sheet', 'ClientReceiptController@index');
         Route::post('new-receipt', 'ClientReceiptController@store');
         // Route::apiResource('clients', 'ClientController');
         Route::controller('ClientController')->group(function () {
@@ -81,7 +81,7 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
             Route::post('add-client', 'store');
             Route::get('clients/{client}', 'show');
             Route::post('clients/{client}', 'update');
-            Route::get('clients-group', 'clientsGroups');
+            Route::post('clients-group', 'clientsGroups');
         });
         
 
