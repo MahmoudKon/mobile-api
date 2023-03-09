@@ -17,7 +17,7 @@ class SalePoint extends Model
     public function moneyPoint(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value ?? 0,
+            get: fn ($value) => format_price($value ?? 0),
         );
     }
 

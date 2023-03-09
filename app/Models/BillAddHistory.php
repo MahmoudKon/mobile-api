@@ -29,14 +29,14 @@ class BillAddHistory extends Model
     protected function billAdd(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => number_format($value, 2),
+            set: fn ($value) => format_price($value ?? 0),
         );
     }
 
     protected function additionValue(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => number_format($value, 2),
+            set: fn ($value) => format_price($value ?? 0),
         );
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\FilterPerShop;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class ClientTransaction extends Model
@@ -20,6 +21,20 @@ class ClientTransaction extends Model
         })->where(function ($query) {
             $query->whereNull('is_deleted')->orWhere('is_deleted', 0);
         });
+    }
+
+    protected function amount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => format_price($value),
+        );
+    }
+
+    protected function safeBalance(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => format_price($value),
+        );
     }
 
     public function invoice()

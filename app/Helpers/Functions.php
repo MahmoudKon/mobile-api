@@ -1,31 +1,43 @@
 <?php
 
 if ( !function_exists( 'authUser' ) ) {
-    function authUser() {
+    function authUser(): ?\App\Models\User {
         return auth()->user();
     }
 }
 
 if ( !function_exists( 'authId' ) ) {
-    function authId() {
+    function authId(): ?int {
         return auth()->id();
     }
 }
 
 if ( !function_exists( 'shopId' ) ) {
-    function shopId() {
+    function shopId(): ?int {
         return authUser()->shop_id ?? null;
     }
 }
 
 if ( !function_exists( 'salePointId' ) ) {
-    function salePointId() {
+    function salePointId(): ?int {
         return authUser()->sale_point ?? null;
     }
 }
 
+if ( !function_exists( 'shop' ) ) {
+    function shop(): \App\Models\Badrshop {
+        return authUser()->shop ?? new \App\Models\Badrshop();
+    }
+}
+
+if ( !function_exists( 'format_price' ) ) {
+    function format_price(float $price): float|string {
+        return number_format($price, shop()->decimal_num_price ?? 2);
+    }
+}
+
 if (!function_exists( 'day_now' )) {
-    function day_now($type) {
+    function day_now(int $type): string {
         if ($type == 1) \Carbon\Carbon::setLocale('ar');
         return \Carbon\Carbon::now()->format('Y-m-d H:i:s');
     }

@@ -19,14 +19,12 @@ class ItemController extends GeneralApiController
     public function items2()
     {
         $rows = $this->query()->get();
-        return $rows->count()
-            ? $this->sendResponse(result: ['data' => $this->resource::collection($rows)])
-            : $this->sendError('no data found');
+        return $this->returnData($this->resource::collection($rows));
     }
 
     public function itemsPrices()
     {
-        $rows = ItemPrice::query()->select('id', 'shop_id', 'price', 'list_quant', 'item_id', 'list_id')->with('item', 'list')->get();
+        $rows = ItemPrice::select('id', 'shop_id', 'price', 'list_quant', 'item_id', 'list_id')->with('item', 'list')->get();
         return $this->returnData(ItemPricesResource::collection($rows));
     }
 

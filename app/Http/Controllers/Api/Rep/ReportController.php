@@ -15,13 +15,13 @@ class ReportController extends BasicApiController
         $p_scale = DB::table('badr_shop')->select('decimal_num_price')->where('serial_id', shopId())->first()->decimal_num_price;
         $date = request()->get('date', date('Y-m-d'));
 
-        $rows = ClientTransaction::select('id', 'pay_day', 'effect', 'bill_id', 'type', DB::raw("TRUNCATE(amount, $p_scale) as amount"), 'user_id', 'client_id', 'safe_balance')->with('user', 'client', 'invoice')
+        $rows = ClientTransaction::select('id', 'pay_day', 'effect', 'bill_id', 'type', 'amount', 'user_id', 'client_id', 'safe_balance')->with('user', 'client', 'invoice')
                             ->where('pay_day', $date)->where('amount', '>', 0)->get();
 
         if (count($rows) == 0) return $this->sendError('No Data Found');
 
         $rows = $rows->merge([$this->getPreviousDetails($rows->first(), $p_scale)]);
-        $money_point = SalePoint::select(DB::raw("TRUNCATE(money_point, $p_scale) as money_point"))->first()->money_point ?? 0;
+        $money_point = SalePoint::select('money_point')->first()->money_point;
         return $this->sendResponse(result: ['data' => ClientTransactionResource::collection($rows), 'money_point' => $money_point]);
     }
 

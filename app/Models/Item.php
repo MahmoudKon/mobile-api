@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Traits\FilterPerShop;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Item extends Model
@@ -19,6 +18,27 @@ class Item extends Model
     {
         return Attribute::make(
             get: fn ($value) => config('app.img_url').$value,
+        );
+    }
+
+    protected function salePrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => format_price($value ?? 0),
+        );
+    }
+
+    protected function lowestPrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => format_price($value ?? 0),
+        );
+    }
+
+    protected function payPrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => format_price($value ?? 0),
         );
     }
 

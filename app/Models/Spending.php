@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Spending extends Model
@@ -10,6 +11,13 @@ class Spending extends Model
     protected $table = 'spending';
     protected $guarded = ['id'];
     public $timestamps = false;
+
+    protected function amount(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => format_price($value ?? 0),
+        );
+    }
 
     public function spendItem()
     {

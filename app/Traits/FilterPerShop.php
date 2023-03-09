@@ -11,7 +11,8 @@ trait FilterPerShop
         parent::boot();
 
         static::addGlobalScope('perShop', function (Builder $builder) {
-            $builder->where('shop_id', shopId())->orderBy('id', 'desc');
+            $current_class = app(__CLASS__)->getTable();
+            $builder->where("$current_class.shop_id", shopId())->orderBy("$current_class.id", 'desc');
         });
 
         static::creating(function ($model) {

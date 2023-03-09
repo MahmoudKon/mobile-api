@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Api\Rep;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\GeneralApiController;
 use App\Http\Resources\ItemTypesResource;
 use App\Models\ItemType;
 use App\Http\Requests\Api\ItemTypeRequest;
-use Illuminate\Http\Request;
 
 class ItemTypeController extends GeneralApiController
 {

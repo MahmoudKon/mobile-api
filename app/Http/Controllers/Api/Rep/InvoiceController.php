@@ -6,18 +6,15 @@ use App\Http\Controllers\BasicApiController;
 use App\Http\Requests\Api\InvoiceRequest;
 use App\Http\Resources\InvoicesResource;
 use App\Http\Services\InvoiceService;
-use App\Models\Badrshop;
 use App\Models\BillAdd;
 use App\Models\BillAddHistory;
 use App\Models\Invoice;
-use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends BasicApiController
 {
     public function additions()
     {
-        $p_scale = Badrshop::select('decimal_num_price')->where('serial_id', $this->shop_id)->first()->decimal_num_price;
-        $rows = BillAdd::select('id', 'addition_name as name', 'check_addition as type', DB::raw("TRUNCATE(addition_value, $p_scale) as value"))->whereIn('add_role', [0, 1])->where('check_bill_type', '!=', 2)->get()->toArray();
+        $rows = BillAdd::select('id', 'addition_name as name', 'check_addition as type', 'addition_value as value')->whereIn('add_role', [0, 1])->where('check_bill_type', '!=', 2)->get()->toArray();
         return $this->returnData($rows);
     }
 
@@ -63,7 +60,7 @@ class InvoiceController extends BasicApiController
 
     public function show($id)
     {
-        $shop = Badrshop::select('currency', 'bill_adds')->where('serial_id', shopId())->first();
+        $shop = shop();
 
         $bill = Invoice::select('id', 'bill_no', 'invoice_date', 'net_price', 'local_bill_no', 'client_id', 'payment', 'invoice_total_disc', 'invoice_total_disc_type')
                                 ->with('client', 'details')->where('id', $id)->first();

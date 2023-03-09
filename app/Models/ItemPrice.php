@@ -3,8 +3,7 @@
 namespace App\Models;
 
 use App\Traits\FilterPerShop;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class ItemPrice extends Pivot
@@ -12,6 +11,13 @@ class ItemPrice extends Pivot
     use FilterPerShop;
 
     protected $table = 'items_prices';
+
+    protected function price(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => format_price($value ?? 0),
+        );
+    }
 
     public function item()
     {

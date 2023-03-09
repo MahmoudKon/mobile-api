@@ -54,7 +54,9 @@ class User extends Authenticatable
 
     public function shop()
     {
-        return $this->belongsTo(Badrshop::class, 'shop_id', 'serial_id')->select('serial_id', 'run_date', 'online', 'shop_name', 'decimal_num_price', 'decimal_num_quant', 'sale_details', 'currency', 'allow_lines');
+        return $this->belongsTo(Badrshop::class, 'shop_id', 'serial_id')
+                    ->select('serial_id', 'run_date', 'online', 'shop_name', 'decimal_num_price', 'decimal_num_quant', 'sale_details', 'currency', 'allow_lines', 'bill_adds')
+                    ->withDefault(['decimal_num_price' => 2, 'decimal_num_price' => 2, 'shop_name' => '', 'run_date' => now(), 'online' => false]);
     }
 
     public function salePoint()

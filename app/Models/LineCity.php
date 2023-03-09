@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\FilterPerShop;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class LineCity extends Model

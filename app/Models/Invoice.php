@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\FilterPerShop;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model
@@ -17,6 +18,48 @@ class Invoice extends Model
     const SALES = 1;
     const BACK_PURCHASES = 2;
     const BACK_SALES = 3;
+
+    protected function billTotal(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => format_price($value ?? 0),
+        );
+    }
+
+    protected function netPrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => format_price($value ?? 0),
+        );
+    }
+
+    protected function payment(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => format_price($value ?? 0),
+        );
+    }
+
+    protected function billPayment(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => format_price($value ?? 0),
+        );
+    }
+
+    protected function rest(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => format_price($value ?? 0),
+        );
+    }
+
+    protected function balance(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => format_price($value ?? 0),
+        );
+    }
 
     public function details()
     {
