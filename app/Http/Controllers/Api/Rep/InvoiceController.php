@@ -47,14 +47,14 @@ class InvoiceController extends BasicApiController
     public function newBill(InvoiceRequest $request, InvoiceService $service)
     {
         $response = $service->handler($request->validated(), Invoice::SALES);
-        if ($response['status'] == 200) return $this->sendResponse();
+        if ($response['status'] == 200) return $this->sendResponse(result: $response['bills']);
         return $this->sendError($response['message']);
     }
 
     public function newBackBill(InvoiceRequest $request, InvoiceService $service)
     {
         $response = $service->handler($request->validated(), Invoice::BACK_SALES);
-        if ($response['status'] == 200) return $this->sendResponse();
+        if ($response['status'] == 200) return $this->sendResponse(result: $response['bills']);
         return $this->sendError($response['message']);
     }
 

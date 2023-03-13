@@ -24,6 +24,7 @@ class InvoiceService
     protected Invoice $invoice;
     protected $type;
     protected array $details = [];
+    protected array $saved_invoices = [];
 
     public function __construct()
     {
@@ -46,10 +47,11 @@ class InvoiceService
                     $this->createTransaction();
 
                     $this->newInvoiceLog();
+                    $this->saved_invoices[] = ['bill_no' => $this->invoice->bill_no, 'bill_id' => $this->invoice->id];
                 }
             DB::commit();
 
-            return ['status' => 200];
+            return ['status' => 200, 'bills' => $this->saved_invoices];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
         }
