@@ -23,8 +23,7 @@ class ClientController extends GeneralApiController
                                     $query->where('id', authUser()->clients_group);
                                 })->get()->toArray();
         $clients = (new ClientController)->query()->get();
-        $response = ['groups' => $groups, 'clients' => ClientsResource::collection($clients)];
-        return $this->sendResponse(result: $response);
+        return $this->returnData(['groups' => $groups, 'clients' => ClientsResource::collection($clients)]);
     }
 
     public function store(ClientRequest $request)

@@ -31,7 +31,8 @@ if ( !function_exists( 'shop' ) ) {
 }
 
 if ( !function_exists( 'format_price' ) ) {
-    function format_price(float $price): float|string {
+    function format_price(float $price): float {
+        return $price;
         return number_format($price, shop()->decimal_num_price ?? 2);
     }
 }

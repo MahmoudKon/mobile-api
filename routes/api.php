@@ -62,7 +62,7 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
 
 
         Route::controller('InvoiceController')->group(function () {
-            Route::get('invoices/additions', 'additions');
+            Route::get('bill-add', 'additions');
             Route::get('invoices/sales', 'sales');
             Route::get('invoices/back-sales', 'backSales');
             Route::get('invoices/purchases', 'purchases');

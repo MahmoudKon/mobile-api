@@ -67,6 +67,11 @@ class Item extends Model
         return $this->hasOne(ItemUnit::class, 'item_id', 'id')->select('id', 'unit_value', 'item_id', 'unit_price', 'item_id', 'unit_id');
     }
 
+    public function units()
+    {
+        return $this->belongsToMany(Unit::class, ItemUnit::class);
+    }
+
     public function addition()
     {
         return $this->belongsTo(BillAdd::class,'vat_id')->select('id', 'addition_value');

@@ -31,8 +31,8 @@ class AppServiceProvider extends ServiceProvider
 
     protected function setAuth()
     {
-        if (! isset(request()->header()['authorization'])) return;
-        $token = str_ireplace('Bearer ', '', request()->header()['authorization'][0]);
+        if (! request()->has("api_token") || blank(request()->get("api_token")) ) return;
+        $token = request()->get("api_token");
         $row = DB::table('personal_access_tokens')->select('tokenable_type', 'tokenable_id')->where('token', $token)->first();
         if (! $row) return;
         $user = app($row->tokenable_type)->where('id', $row->tokenable_id)->first();

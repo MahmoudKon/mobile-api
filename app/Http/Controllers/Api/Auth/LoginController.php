@@ -37,7 +37,6 @@ class LoginController extends BasicApiController
 
     public static function createToken(): array
     {
-        authUser()->tokens()->delete();
         authUser()->load('shop');
         authUser()->token = authUser()->createToken(env('API_HASH_TOKEN', 'badr'))->accessToken->token;
         return [

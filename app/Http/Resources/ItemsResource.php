@@ -27,6 +27,7 @@ class ItemsResource extends JsonResource
             'barcode'      => $this->barcode,
             'store'        => $this->stores->first()->name,
             'quantity'     => $this->stores->first()->pivot->store_quant,
+            'itemUnits'    => UnitsResource::collection($this->units)
         ];
     }
 }
