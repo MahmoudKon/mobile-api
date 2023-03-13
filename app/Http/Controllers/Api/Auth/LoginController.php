@@ -39,9 +39,9 @@ class LoginController extends BasicApiController
     {
         authUser()->tokens()->delete();
         authUser()->load('shop');
+        authUser()->token = authUser()->createToken(env('API_HASH_TOKEN', 'badr'))->accessToken->token;
         return [
-            'token' => authUser()->createToken(env('API_HASH_TOKEN', 'badr'))->accessToken->token,
-            'user'  => new UsersResource(authUser()),
+            'data'  => new UsersResource(authUser()),
         ];
     }
 }
