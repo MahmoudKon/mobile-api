@@ -40,7 +40,7 @@ class InvoiceRequest extends FormRequest
             'bills.*.sale_details.*.unit_id'  => "required|exists:units,id,shop_id,".shopId(),
             'bills.*.sale_details.*.unitValue'=> "required|numeric",
             'bills.*.discount_type'           => 'required|numeric|in:0,1',
-            'bills.*.discountCashValue'       => 'required|numeric|min:1',
+            'bills.*.discountCashValue'       => 'required|numeric|min:0',
             'bills.*.discount'                => 'required|numeric|min:0',
             'bills.*.pay_method'              => 'required|numeric|in:0,1',
             'bills.*.payment'                 => 'required|numeric|min:0',

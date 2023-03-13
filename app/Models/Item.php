@@ -76,4 +76,33 @@ class Item extends Model
     {
         return $this->belongsTo(BillAdd::class,'vat_id')->select('id', 'addition_value');
     }
+
+
+    public function getVat()
+    {
+        if ($this->vat_state == 2 && !is_null($this->add)) {
+            $add = $this->add;
+            if ($add->check_addition == 0) {
+                $value = $this->sale_price - ($this->sale_price / (($add->addition_value / 100) + 1));
+                return $value;
+            } elseif ($add->check_addition == 1) {
+                return $add->addition_value;
+            }
+        }
+        return "";
+    }
+
+    public function getPriceWithoutVat()
+    {
+        if ($this->vat_state == 2 && !is_null($this->add)) {
+            $add = $this->add;
+            if ($add->check_addition == 0) {
+                $value = $this->sale_price / (($add->addition_value / 100) + 1);
+                return $value;
+            } elseif ($add->check_addition == 1) {
+                return $this->sale_price - $add->addition_value;
+            }
+        }
+        return $this->sale_price;
+    }
 }
