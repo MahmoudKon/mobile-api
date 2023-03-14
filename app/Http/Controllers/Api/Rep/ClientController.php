@@ -10,6 +10,7 @@ use App\Http\Services\ClientService;
 use App\Models\Badrshop;
 use App\Models\Client;
 use App\Models\ClientsGroup;
+use Illuminate\Support\Facades\File;
 
 class ClientController extends GeneralApiController
 {
@@ -58,10 +59,26 @@ class ClientController extends GeneralApiController
         ini_set('max_input_time', 0);
         ini_set('memory_limit', '256M');
 
-        $file_name = time()."-$client->name.xlsx";
+        $file_name = $this->checkFile($client_id);
         \Excel::store(new ClientBalanceExport($client), $file_name);
+        return $this->sendResponse(result: ['file' => url($file_name)]);
+    }
 
-        return $this->sendResponse(result: ['file' => $file_name]);
+    protected function checkFile($folder)
+    {
+        $path =  "excel".DIRECTORY_SEPARATOR.$folder;
+        $file_path = $path . DIRECTORY_SEPARATOR . "client_balance.xlsx";
+
+        if (file_exists( $file_path ))
+            unlink( $file_path );
+
+        if (!file_exists($path))
+            mkdir($path, 0777, true);
+
+        if (!file_exists($file_path))
+            touch(  $file_path, strtotime('-1 days'));
+
+        return $file_path;
     }
 
     public function query(?int $id = null): \Illuminate\Database\Eloquent\Builder
