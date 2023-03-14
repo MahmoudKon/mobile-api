@@ -75,7 +75,6 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
 
         Route::get('balance-sheet', 'ClientReceiptController@index');
         Route::post('new-receipt', 'ClientReceiptController@store');
-        Route::get('clients/{id}/balance-sheet-excel', 'ClientReceiptController@balanceSheetExcel');
 
         // Route::apiResource('clients', 'ClientController');
         Route::controller('ClientController')->group(function () {
@@ -84,6 +83,7 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
             Route::get('clients/{client}', 'show');
             Route::post('clients/{client}', 'update');
             Route::post('clients-group', 'clientsGroups');
+            Route::get('clients/{client}/balance-sheet-excel', 'balanceSheetExcel');
         });
 
 

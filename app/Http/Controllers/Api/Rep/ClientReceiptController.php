@@ -68,9 +68,4 @@ class ClientReceiptController extends BasicApiController
             return $this->sendError($e->getMessage());
         }
     }
-
-    public function balanceSheetExcel($id, Request $request)
-    {
-        return $this->sendError("error");
-    }
 }

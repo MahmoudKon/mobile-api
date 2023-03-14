@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Rep;
 
+use App\Exports\ClientBalanceExport;
 use App\Http\Controllers\GeneralApiController;
 use App\Http\Requests\Api\ClientRequest;
 use App\Http\Resources\ClientsResource;
@@ -44,6 +45,23 @@ class ClientController extends GeneralApiController
         if (!$row) return $this->sendError('This client not exists');
         $row->update($request->validated());
         return $this->sendResponse('Client updated successfully', ['client' => new $this->resource($row)]);
+    }
+
+    public function balanceSheetExcel($client_id)
+    {
+        $client = Client::select('id', 'client_name as name', 'shop_id')->find($client_id);
+
+        if (! $client)
+            return $this->sendError('This client not found!');
+
+        ini_set('max_execution_time', 0);
+        ini_set('max_input_time', 0);
+        ini_set('memory_limit', '256M');
+
+        $file_name = time()."-$client->name.xlsx";
+        \Excel::store(new ClientBalanceExport($client), $file_name);
+
+        return $this->sendResponse(result: ['file' => $file_name]);
     }
 
     public function query(?int $id = null): \Illuminate\Database\Eloquent\Builder
