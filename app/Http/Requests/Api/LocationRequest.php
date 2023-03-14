@@ -37,7 +37,7 @@ class LocationRequest extends FormRequest
     {
         return [
             'details' => "required|array|min:1",
-            'details.*.time' => "required|date_format:Y-m-d H:i:s",
+            'details.*.time' => "nullable|date_format:Y-m-d H:i:s",
             'details.*.lon' => "required|string",
             'details.*.lat' => "required|string",
         ];

@@ -51,7 +51,7 @@ class InvoiceService
                 }
             DB::commit();
 
-            return ['status' => 200, 'bills' => $this->saved_invoices];
+            return ['status' => 200, 'data' => $this->saved_invoices];
         } catch (Exception $e) {
             return ['status' => 500, 'message' => $e->getMessage()];
         }

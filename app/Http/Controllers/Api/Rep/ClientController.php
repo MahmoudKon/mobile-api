@@ -34,7 +34,7 @@ class ClientController extends GeneralApiController
         $row = new ClientService($validated_data);
 
         return $row->client
-            ? $this->sendResponse('Client created successfully', ['data' => new $this->resource($row->client)])
+            ? $this->sendResponse('Client created successfully', ['client' => new $this->resource($row->client)])
             : $this->sendError('Error try again');
     }
 
@@ -43,7 +43,7 @@ class ClientController extends GeneralApiController
         $row = $this->model::find($id);
         if (!$row) return $this->sendError('This client not exists');
         $row->update($request->validated());
-        return $this->sendResponse('Client updated successfully', ['data' => new $this->resource($row)]);
+        return $this->sendResponse('Client updated successfully', ['client' => new $this->resource($row)]);
     }
 
     public function query(?int $id = null): \Illuminate\Database\Eloquent\Builder

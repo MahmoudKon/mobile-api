@@ -28,16 +28,16 @@ class ClientRequest extends FormRequest
     {
         return [
             'client_name'       => 'required|unique:clients,client_name,'.request()->route()->client,
-            'tele'              => 'required|numeric|unique:clients,tele,'.request()->route()->client,
+            'tele'              => 'nullable|numeric|unique:clients,tele,'.request()->route()->client,
             'mobile1'           => 'nullable|numeric|unique:clients,mobile1,'.request()->route()->client,
-            'balance'           => 'required|numeric|min:0',
+            'balance'           => 'nullable|numeric|min:0',
             'client_tax_number' => 'nullable|string|max:191',
-            'lat'               => 'required|numeric',
-            'lon'               => 'required|numeric',
-            'address'           => 'required|string',
-            'addition_data'     => 'required|string',
-            'credit_limit'      => 'required|numeric|min:0',
-            'date_zero'         => 'required|date_format:Y-m-d H:i:s',
+            'lat'               => 'nullable|numeric',
+            'lon'               => 'nullable|numeric',
+            'address'           => 'nullable|string',
+            'addition_data'     => 'nullable|string',
+            'credit_limit'      => 'nullable|numeric|min:0',
+            'date_zero'         => 'nullable|date_format:Y-m-d H:i:s',
         ];
     }
 }

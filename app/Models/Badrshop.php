@@ -16,7 +16,7 @@ class Badrshop extends Model
 
     public function checkIsActive(): bool
     {
-        if ($this->online) return true;
+        if (! $this->online) return true;
         if (Carbon::parse($this->run_date) < today()) return true;
         return false;
     }

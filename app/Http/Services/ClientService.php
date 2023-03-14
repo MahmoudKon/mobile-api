@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 class ClientService
 {
     public Client $client;
-    public array $transaction;
 
     public function __construct(protected array $validated)
     {
@@ -44,7 +43,7 @@ class ClientService
 
     protected function createTransaction()
     {
-        $this->transaction = ClientTransaction::create([
+        ClientTransaction::create([
                 'date_time'     => now(),
                 'pay_day'       => now(),
                 'type'          => 4,
