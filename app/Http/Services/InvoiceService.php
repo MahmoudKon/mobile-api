@@ -96,7 +96,7 @@ class InvoiceService
             'rest'                      => $bill['total'] - $bill['payment'],
             'balance'                   => $this->client->balance,
             'client_id'                 => $bill['client_id'],
-            'add_user'                  => $bill['user_id'] ?? 0,
+            'add_user'                  => authUser()->id ?? 0,
             'invoice_total_disc_status' => $this->shop->company_ratio == 2 ? 0 : 1,
             'insatllments_add'          => $bill['installment_add_precent'] ?? 0,
             'supplier_invoice_no'       => $bill['supplier_invoice_no'] ?? null,
