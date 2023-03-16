@@ -9,9 +9,13 @@ use Maatwebsite\Excel\Concerns\FromView;
 
 class ClientBalanceExport implements FromView
 {
-    public function __construct(public Client $client)
+    private $from;
+    private $to;
+
+    public function __construct(public Client $client, public array $data)
     {
-        //
+        $this->from = $data['from'] ?? null;
+        $this->to   = $data['to'] ?? null;
     }
 
     /**
@@ -32,7 +36,13 @@ class ClientBalanceExport implements FromView
                                 ->where(function($query) {
                                     $query->whereNull('is_deleted')->orWhere('is_deleted', false);
                                 })
-                                ->with('invoice:id,bill_no')->get();
+                                ->when($this->from, function($query) {
+                                    $query->where('pay_day', '>=', $this->from);
+                                })
+                                ->when($this->to, function($query) {
+                                    $query->where('pay_day', '<=', $this->to);
+                                })
+                                ->with('invoice:id,bill_no')->orderBy('pay_day', 'DESC')->get();
 
         return prepareTransactions($transactions);
     }

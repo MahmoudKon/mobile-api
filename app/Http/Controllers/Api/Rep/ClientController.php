@@ -10,7 +10,7 @@ use App\Http\Services\ClientService;
 use App\Models\Badrshop;
 use App\Models\Client;
 use App\Models\ClientsGroup;
-use Illuminate\Support\Facades\File;
+use Illuminate\Http\Request;
 
 class ClientController extends GeneralApiController
 {
@@ -48,7 +48,7 @@ class ClientController extends GeneralApiController
         return $this->sendResponse('Client updated successfully', ['client' => new $this->resource($row)]);
     }
 
-    public function balanceSheetExcel($client_id)
+    public function balanceSheetExcel($client_id, Request $request)
     {
         $client = Client::select('id', 'client_name as name', 'shop_id')->find($client_id);
 
@@ -60,7 +60,7 @@ class ClientController extends GeneralApiController
         ini_set('memory_limit', '256M');
 
         $file_name = $this->checkFile($client_id);
-        \Excel::store(new ClientBalanceExport($client), $file_name);
+        \Excel::store(new ClientBalanceExport($client_id, $request->all()), $file_name);
         return $this->sendResponse(result: ['file' => url($file_name)]);
     }
 
