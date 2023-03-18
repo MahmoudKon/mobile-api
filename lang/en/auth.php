@@ -16,5 +16,9 @@ return [
     'failed' => 'These credentials do not match our records.',
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-
+    'logged' => 'User logged successfully.',
+    'subscription expired' => 'You subscription expired.',
+    'cannot login' => 'You don\'t have the permission to login.',
+    'refresh token' => 'Token refreshed successfully',
+    'logout' => 'User Logged Out'
 ];

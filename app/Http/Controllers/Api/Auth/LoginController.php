@@ -12,18 +12,18 @@ class LoginController extends BasicApiController
     public function login(LoginRequest $request): \Illuminate\Http\JsonResponse
     {
         if (auth()->attempt($this->credentials($request))) {
-            if ( ! authUser()->shop->checkIsActive() )
-                return $this->sendError('You subscription expire');
+            if (! authUser()->shop->checkIsActive() )
+                return $this->sendError(trans('auth.subscription expired'));
 
             if (authUser()->login == 0)
-                return $this->sendError('You don\'t have the permission to login');
+                return $this->sendError(trans('auth.cannot login'));
 
             if ($request->player_id)
                 authUser()->update(['player_id' => $request->player_id]);
 
-            return $this->sendResponse('User login successfully.', self::createToken());
+            return $this->sendResponse(trans('auth.logged'), self::createToken());
         } else {
-            return $this->sendError('These credentials do not match our records.');
+            return $this->sendError(trans('auth.failed'));
         }
     }
 

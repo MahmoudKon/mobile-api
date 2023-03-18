@@ -35,4 +35,15 @@ class ReceiptRequest extends FormRequest
             'details.*.date' => 'required|date_format:Y-m-d h:i:s a'
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'client_id' => trans('inputs.client_id'),
+            'bill_id'   => trans('inputs.bill_id'),
+            'type'      => trans('inputs.type'),
+            'amount'    => trans('inputs.amount'),
+            'date'      => trans('inputs.date'),
+        ];
+    }
 }

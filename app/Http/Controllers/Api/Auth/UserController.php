@@ -10,7 +10,7 @@ class UserController extends BasicApiController
 {
     public function refresh(): \Illuminate\Http\JsonResponse
     {
-        return $this->sendResponse('Token refreshed successfully.', LoginController::createToken());
+        return $this->sendResponse(trans('auth.refresh token'), LoginController::createToken());
     }
 
     public function profile(): \Illuminate\Http\JsonResponse
@@ -22,6 +22,6 @@ class UserController extends BasicApiController
     public function logout(): \Illuminate\Http\JsonResponse
     {
         authUser()->tokens()->delete();
-        return $this->sendResponse('User Logged out');
+        return $this->sendResponse(trans('auth.logout'));
     }
 }

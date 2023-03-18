@@ -40,4 +40,21 @@ class ClientRequest extends FormRequest
             'date_zero'         => 'nullable|date_format:Y-m-d H:i:s',
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'client_name'        => trans('inputs.client_name'),
+            'tele'               => trans('inputs.tele'),
+            'mobile1'            => trans('inputs.mobile1'),
+            'balance'            => trans('inputs.balance'),
+            'client_tax_number'  => trans('inputs.client_tax_number'),
+            'lat'                => trans('inputs.lat'),
+            'lon'                => trans('inputs.lon'),
+            'address'            => trans('inputs.address'),
+            'addition_data'      => trans('inputs.addition_data'),
+            'credit_limit'       => trans('inputs.credit_limit'),
+            'date_zero'          => trans('inputs.date_zero'),
+        ];
+    }
 }

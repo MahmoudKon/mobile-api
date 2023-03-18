@@ -35,4 +35,16 @@ class SpendRequest extends FormRequest
             'file'      => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,pdf',
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'term_id'  => trans('inputs.term_id'),
+            'date'     => trans('inputs.date'),
+            'amount'   => trans('inputs.amount'),
+            'local_id' => trans('inputs.local_id'),
+            'notes'    => trans('inputs.notes'),
+            'file'     => trans('inputs.file'),
+        ];
+    }
 }

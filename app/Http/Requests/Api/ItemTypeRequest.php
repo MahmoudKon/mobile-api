@@ -31,4 +31,12 @@ class ItemTypeRequest extends FormRequest
             'upload_img' => (request()->route()->item_type ? 'nullable' : 'required') . '|image|mimes:jpeg,png,jpg,gif,svg',
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'name'        => trans('inputs.category_name'),
+            'upload_img'  => trans('inputs.image')
+        ];
+    }
 }

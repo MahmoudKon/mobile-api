@@ -31,4 +31,12 @@ class ListClientLineRequest extends FormRequest
             'lon' => ['required', 'numeric']
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'lat' => trans('inputs.lat'),
+            'lon' => trans('inputs.lon')
+        ];
+    }
 }

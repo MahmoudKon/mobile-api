@@ -51,4 +51,13 @@ class LocationRequest extends FormRequest
             'lat' => "required|string",
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'time' => trans('inputs.time'),
+            'lon'  => trans('inputs.lon'),
+            'lat'  => trans('inputs.lat'),
+        ];
+    }
 }

@@ -32,4 +32,13 @@ class LoginRequest extends FormRequest
             'player_id' => 'nullable|string',
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'user_name' => trans('inputs.user_name'),
+            'password'  => trans('inputs.password'),
+            'player_id' => trans('inputs.player_id'),
+        ];
+    }
 }

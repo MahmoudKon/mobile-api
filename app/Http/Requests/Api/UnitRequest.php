@@ -30,4 +30,11 @@ class UnitRequest extends FormRequest
             'name' => "required|unique:units,name,".request()->route()->unit.",id,shop_id,".shopId()
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'name'  => trans('inputs.unit_name')
+        ];
+    }
 }
