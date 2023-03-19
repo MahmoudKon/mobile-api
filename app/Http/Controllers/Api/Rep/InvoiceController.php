@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api\Rep;
 
 use App\Http\Controllers\BasicApiController;
-use App\Http\Requests\Api\InvoiceRequest;
 use App\Http\Resources\InvoicesResource;
 use App\Http\Services\InvoiceService;
 use App\Models\BillAdd;
 use App\Models\BillAddHistory;
 use App\Models\Invoice;
+use Illuminate\Http\Request;
 
 class InvoiceController extends BasicApiController
 {
@@ -44,16 +44,16 @@ class InvoiceController extends BasicApiController
                 ->withCount('details')->with('client')->whereDate('invoice_date', request()->get('date', date('Y-m-d')))->get();
     }
 
-    public function newBill(InvoiceRequest $request, InvoiceService $service)
+    public function newBill(Request $request, InvoiceService $service)
     {
-        $response = $service->handler($request->validated(), Invoice::SALES);
+        $response = $service->handler($request->all(), Invoice::SALES);
         if ($response['status'] == 200) return $this->sendResponse(result: ['data' => $response['data']]);
         return $this->sendError($response['message']);
     }
 
-    public function newBackBill(InvoiceRequest $request, InvoiceService $service)
+    public function newBackBill(Request $request, InvoiceService $service)
     {
-        $response = $service->handler($request->validated(), Invoice::BACK_SALES);
+        $response = $service->handler($request->all(), Invoice::BACK_SALES);
         if ($response['status'] == 200) return $this->sendResponse(result: ['data' => $response['data']]);
         return $this->sendError($response['message']);
     }

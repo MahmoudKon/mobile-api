@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Http\Requests\Api\InvoiceRequest;
 use App\Models\Badrshop;
 use App\Models\Client;
 use App\Models\ClientTransaction;
@@ -15,6 +16,7 @@ use App\Models\StoreItem;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class InvoiceService
 {
@@ -28,7 +30,7 @@ class InvoiceService
 
     public function __construct()
     {
-        $this->shop = Badrshop::first();
+        $this->shop = Badrshop::select('serial_id', 'company_ratio', 'add_delivery_fees_to_the_cash_drawer', 'date_type')->first();
     }
 
     public function handler(array $data = [], int $type = 1)
@@ -37,15 +39,29 @@ class InvoiceService
             DB::beginTransaction();
                 $this->type = $type;
                 foreach ($data['bills'] as $bill) {
-                    $this->resetProperties();
-                    $this->salePoint = SalePoint::select('store_id', 'id', 'currency_id')->whereId($bill['sale_point'])->first();
-                    $this->client = Client::find($bill['client_id']);
-                    $this->updateClientBalance($bill);
-                    $this->updateSalePointBalance($bill);
+                    $result = Validator::make($bill, (new InvoiceRequest)->single_rules());
+                    if ($result->fails()) contunue;
+
+                    $this->resetProperties(); // make all properties null
+                    $this->salePoint = SalePoint::select('store_id', 'id', 'currency_id', 'money_point')->whereId($bill['sale_point'])->first();
+                    $this->client = Client::select('id', 'balance')->find($bill['client_id']);
+
+                    // To update the client balance [increment or decrement]
+                    $this->updateClientBalance($bill['total'], $bill['payment']);
+
+                    // To update the sale poind money_point [increment or decrement]
+                    $this->updateSalePointBalance($bill['total']);
+
+                    // To create new invoice
                     $this->createInvoice($bill);
+
+                    // To create bill details
                     $this->itemsProcess($bill['sale_details']);
+
+                    // To create client transaction
                     $this->createTransaction();
 
+                    // To create invoice log
                     $this->newInvoiceLog();
                     $this->saved_invoices[] = ['bill_no' => $this->invoice->bill_no, 'bill_id' => $this->invoice->id];
                 }
@@ -56,24 +72,24 @@ class InvoiceService
             return ['status' => 500, 'message' => $e->getMessage()];
         }
     }
-    
-    protected function updateClientBalance(array $bill): void
+
+    protected function updateClientBalance(float $total = 0, float $payment = 0): void
     {
         if ($this->type == Invoice::SALES)
-            $this->client->increment('balance', $bill['total'] - $bill['payment']);
+            $this->client->increment('balance', $total - $payment);
         else
-            $this->client->decrement('balance', $bill['total'] - $bill['payment']);
+            $this->client->decrement('balance', $total - $payment);
 
         $this->client->refresh();
     }
 
-    protected function updateSalePointBalance(array $bill): void
+    protected function updateSalePointBalance(float $total): void
     {
         if ($this->type == Invoice::SALES)
-            $this->salePoint->increment('money_point', $bill['total']);
+            $this->salePoint->increment('money_point', $total);
         else
-            $this->salePoint->decrement('money_point', $bill['total']);
-        
+            $this->salePoint->decrement('money_point', $total);
+
         $this->salePoint->refresh();
     }
 
