@@ -28,6 +28,14 @@ class Badrshop extends Model
         );
     }
 
+    protected function billAdds(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => (int) !$value,
+        );
+    }
+
+
     protected static function boot()
     {
         parent::boot();
