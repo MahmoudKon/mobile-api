@@ -84,6 +84,7 @@ class ClientController extends GeneralApiController
     public function query(?int $id = null): \Illuminate\Database\Eloquent\Builder
     {
         return $this->model::query()->selectRaw('id, client_name, tele, client_tax_number, shop_id, address, group_id, FORMAT(balance, 2) as balance, lat, lon, price_list_id')
+                            ->whereIn('client_role', [1, 2])
                             ->when($id, fn($q) => $q->where('id', $id))
                             ->when(authUser()->clients_group, function ($query) {
                                 $query->where('group_id', authUser()->clients_group);
