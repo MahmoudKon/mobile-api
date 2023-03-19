@@ -46,7 +46,7 @@ class InvoiceService
                 $this->resetProperties(); // make all properties null
                 $this->salePoint = SalePoint::select('store_id', 'id', 'currency_id', 'money_point')->whereId($bill['sale_point'])->first();
                 $this->client = Client::select('id', 'balance')->find($bill['client_id']);
-//                $bill['total'] = $this->getTotalPrice($bill['sale_details']);
+                // $bill['total'] = $this->getTotalPrice($bill['sale_details']);
 
                 // To update the client balance [increment or decrement]
                 $this->updateClientBalance($bill['total'], $bill['payment']);
