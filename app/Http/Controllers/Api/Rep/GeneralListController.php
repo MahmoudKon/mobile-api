@@ -13,7 +13,7 @@ class GeneralListController extends BasicApiController
 {
     public function settings()
     {
-        $setting = Badrshop::select('multi_price', 'select_client', 'sale_cash', 'tracking', 'make_bill', 'logo_path' ,'company_ratio','sale_details' ,'bill_adds' , 'sale_details', 'allow_lines')->first();
+        $setting = Badrshop::select('multi_price', 'select_client', 'sale_cash', 'tracking', 'make_bill', 'logo_path' ,'company_ratio','sale_details' ,'apply_vats as bill_adds' , 'sale_details', 'allow_lines')->first();
         return $this->sendResponse(result: ['data' => new SettingsResource($setting)]);
     }
 
