@@ -35,36 +35,38 @@ class InvoiceService
 
     public function handler(array $data = [], int $type = 1)
     {
+        \Illuminate\Support\Facades\Log::info(json_encode($data));
         try {
             DB::beginTransaction();
-                $this->type = $type;
-                foreach ($data['bills'] as $bill) {
-                    $result = Validator::make($bill, (new InvoiceRequest)->single_rules());
-                    if ($result->fails()) contunue;
+            $this->type = $type;
+            foreach ($data['bills'] as $bill) {
+                $result = Validator::make($bill, (new InvoiceRequest)->single_rules());
+                if ($result->fails()) contunue;
 
-                    $this->resetProperties(); // make all properties null
-                    $this->salePoint = SalePoint::select('store_id', 'id', 'currency_id', 'money_point')->whereId($bill['sale_point'])->first();
-                    $this->client = Client::select('id', 'balance')->find($bill['client_id']);
+                $this->resetProperties(); // make all properties null
+                $this->salePoint = SalePoint::select('store_id', 'id', 'currency_id', 'money_point')->whereId($bill['sale_point'])->first();
+                $this->client = Client::select('id', 'balance')->find($bill['client_id']);
+//                $bill['total'] = $this->getTotalPrice($bill['sale_details']);
 
-                    // To update the client balance [increment or decrement]
-                    $this->updateClientBalance($bill['total'], $bill['payment']);
+                // To update the client balance [increment or decrement]
+                $this->updateClientBalance($bill['total'], $bill['payment']);
 
-                    // To update the sale poind money_point [increment or decrement]
-                    $this->updateSalePointBalance($bill['total']);
+                // To update the sale poind money_point [increment or decrement]
+                $this->updateSalePointBalance($bill['total']);
 
-                    // To create new invoice
-                    $this->createInvoice($bill);
+                // To create new invoice
+                $this->createInvoice($bill);
 
-                    // To create bill details
-                    $this->itemsProcess($bill['sale_details']);
+                // To create bill details
+                $this->itemsProcess($bill['sale_details']);
 
-                    // To create client transaction
-                    $this->createTransaction();
+                // To create client transaction
+                $this->createTransaction();
 
-                    // To create invoice log
-                    $this->newInvoiceLog();
-                    $this->saved_invoices[] = ['bill_no' => $this->invoice->bill_no, 'bill_id' => $this->invoice->id];
-                }
+                // To create invoice log
+                $this->newInvoiceLog();
+                $this->saved_invoices[] = ['bill_no' => $this->invoice->bill_no, 'bill_id' => $this->invoice->id];
+            }
             DB::commit();
 
             return ['status' => 200, 'data' => $this->saved_invoices];
@@ -73,14 +75,20 @@ class InvoiceService
         }
     }
 
+    protected function getTotalPrice(array $items) : float
+    {
+        $price = 0;
+        foreach ($items as $item) $price += $item['price'];
+
+        return $price;
+    }
+
     protected function updateClientBalance(float $total = 0, float $payment = 0): void
     {
         if ($this->type == Invoice::SALES)
             $this->client->increment('balance', $total - $payment);
         else
             $this->client->decrement('balance', $total - $payment);
-
-        $this->client->refresh();
     }
 
     protected function updateSalePointBalance(float $total): void
@@ -89,8 +97,6 @@ class InvoiceService
             $this->salePoint->increment('money_point', $total);
         else
             $this->salePoint->decrement('money_point', $total);
-
-        $this->salePoint->refresh();
     }
 
     protected function createInvoice(array $bill): void
@@ -101,7 +107,7 @@ class InvoiceService
             'local_bill_no'             => $bill['local_bill_no'],
             'store_id'                  => $this->salePoint->store_id,
             'currency_id'               => $this->salePoint->currency_id,
-            'invoice_type'              => $this->type,
+            'invoice_type'              => $this->type == Invoice::SALES,
             'shop_id'                   => shopId(),
             'bill_no'                   => Invoice::max('bill_no') + 1,
             'bill_total'                => $bill['net'],
@@ -119,9 +125,9 @@ class InvoiceService
             'reference_id'              => $bill['reference_id'] ?? 0,
             'fee'                       => $bill['delivery_fees'] ?? 0,
             'fee_status'                => $this->shop->add_delivery_fees_to_the_cash_drawer,
-            'sales_man'                 => 0,
-            'invoice_total_disc'        => $bill['discountCashValue'],
+            'invoice_total_disc'        => $bill['discount'],
             'invoice_total_disc_type'   => $bill['discount_type'],
+            'sales_man'                 => 0,
             'bill_service_id'           => 0,
             'bill_service_value'        => 0,
             'delivery_option_id'        => 0,
@@ -196,22 +202,30 @@ class InvoiceService
 
     protected function createTransaction(): void
     {
+        $git = $this->invoice->net_price;
+        $pay = $this->invoice->payment;
+
+        if ($this->type != Invoice::SALES) {
+            $git = $this->invoice->payment;
+            $pay = $this->invoice->net_price;
+        }
+
         ClientTransaction::create([
             'user_id'           => authId(),
-            'amount'            => $this->salePoint->money_point ?? 0,
             'pay_day'           => $this->invoice->invoice_date,
             'notes'             => $this->invoice->notes,
-            'date_time'         => day_now($this->shop->date_type),
-            'bill_net_total'    => $this->invoice->net_price,
+            'amount'            => $pay,
+            'bill_net_total'    => $git,
             'bill_id'           => $this->invoice->id,
+            'date_time'         => day_now($this->shop->date_type),
             'balance'           => $this->client->balance,
             'client_id'         => $this->client->id,
             'safe_point_id'     => $this->salePoint->id,
             'safe_balance'      => $this->salePoint->money_point,
-            'type'              => 1,
+            'effect'            => $this->type == Invoice::SALES,
+            'type'              => $this->type == Invoice::SALES,
             'sale_back_id'      => 0,
             'problem_id'        => 0,
-            'effect'            => 0,
             'supplier_id'       => 0,
             'salary_month'      => 0,
             'OutTransactionID'  => 0,
