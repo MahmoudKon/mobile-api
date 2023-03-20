@@ -132,7 +132,7 @@ class ItemController extends GeneralApiController
     {
         $store_id = SalePoint::select('store_id')->find($this->sale_point)->store_id;
         return $this->model::query()->select('id', 'item_name', 'img', 'sale_unit', 'unit_id', 'sale_price', 'lowest_price', 'pay_price', 'barcode', 'vat_state', 'vat_id')
-                    ->with('type', 'addition', 'unit', 'stores', 'units')->where('available', true)
+                    ->with('type', 'addition', 'additions', 'unit', 'stores', 'units')->where('available', true)
                     ->when($id, fn($q) => $q->where('id', $id))
                     ->whereHas('stores', fn($q) => $q->where('store_id', $store_id));
     }

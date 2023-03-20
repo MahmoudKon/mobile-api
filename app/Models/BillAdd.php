@@ -13,11 +13,18 @@ class BillAdd extends Model
     protected $table = 'bills_add';
     protected $guarded = ['id'];
     public $timestamps = false;
-
-    protected function additionValue(): Attribute
+    
+    protected function value(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => format_price($value ?? 0),
+            get: fn ($value) => format_price($value ?? 0),
+        );
+    }
+    
+    protected function type(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? 'value' : 'precent',
         );
     }
 }

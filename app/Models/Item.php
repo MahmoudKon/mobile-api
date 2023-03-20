@@ -77,11 +77,15 @@ class Item extends Model
         return $this->belongsTo(BillAdd::class,'vat_id')->select('id', 'addition_value');
     }
 
+    public function additions()
+    {
+        return $this->belongsToMany(BillAdd::class,'item_vat', 'item_id', 'vat_id')->where('vat_use', 1);
+    }
 
     public function getVat()
     {
-        if ($this->vat_state == 2 && !is_null($this->add)) {
-            $add = $this->add;
+        if ($this->vat_state == 2 && !is_null($this->addition)) {
+            $add = $this->addition;
             if ($add->check_addition == 0) {
                 $value = $this->sale_price - ($this->sale_price / (($add->addition_value / 100) + 1));
                 return $value;
@@ -94,11 +98,10 @@ class Item extends Model
 
     public function getPriceWithoutVat()
     {
-        if ($this->vat_state == 2 && !is_null($this->add)) {
-            $add = $this->add;
+        if ($this->vat_state == 2 && !is_null($this->additions)) {
+            $add = $this->additions->first();
             if ($add->check_addition == 0) {
-                $value = $this->sale_price / (($add->addition_value / 100) + 1);
-                return $value;
+                return $this->sale_price / (($add->addition_value / 100) + 1);
             } elseif ($add->check_addition == 1) {
                 return $this->sale_price - $add->addition_value;
             }

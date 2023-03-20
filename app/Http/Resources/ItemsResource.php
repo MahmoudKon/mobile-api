@@ -24,7 +24,7 @@ class ItemsResource extends JsonResource
             'category_id'           => $this->sale_unit,
             'primary_unit_name'     => $this->unit->name,
             'primary_unit_id'       => $this->unit_id,
-            'sale_price'            => $this->sale_price,
+            'sale_price'            => $this->getPriceWithoutVat(),
             'lowest_price'          => $this->lowest_price,
             'pay_price'             => $this->pay_price,
             'barcode'               => $this->barcode,
@@ -34,8 +34,7 @@ class ItemsResource extends JsonResource
             'price_without_vat'     => $this->sale_price - $this->addition?->addition_value,
             'store'                 => $this->stores->first()->name,
             'quantity'              => $this->stores->first()->pivot->store_quant,
-            'arr_units'             => (new ItemController)->getArrayUnits($this, shopId()),
-            // 'arr_units'             => ItemUnitsResource::collection($this->units)
+            'arr_units'             => (new ItemController)->getArrayUnits($this, shopId())
         ];
     }
 }
