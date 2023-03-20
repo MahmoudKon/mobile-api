@@ -26,13 +26,14 @@ class ReceiptRequest extends FormRequest
      */
     public function rules()
     {
+        \Illuminate\Support\Facades\Log::info( json_encode($this->all()) );
         return [
             'details' => 'required|array|min:1',
             'details.*.client_id' => 'required|exists:clients,id',
-            'details.*.bill_id' => 'required|exists:invoices_,id',
+            'details.*.bill_id' => 'nullable|exists:invoices_,id',
             'details.*.type' => 'required|in:0,1',
             'details.*.amount' => 'required|numeric',
-            'details.*.date' => 'required|date_format:Y-m-d h:i:s a'
+            'details.*.date' => 'required|date_format:Y-m-d h:i:s A'
         ];
     }
 

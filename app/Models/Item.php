@@ -100,10 +100,13 @@ class Item extends Model
     {
         if ($this->vat_state == 2 && !is_null($this->additions)) {
             $add = $this->additions->first();
-            if ($add->check_addition == 0) {
-                return $this->sale_price / (($add->addition_value / 100) + 1);
-            } elseif ($add->check_addition == 1) {
-                return $this->sale_price - $add->addition_value;
+            if ($add) {
+                if ($add->check_addition == 0) {
+                    $value = $this->sale_price / (($add->addition_value / 100) + 1);
+                    return $value;
+                } elseif ($add->check_addition == 1) {
+                    return $this->sale_price - $add->addition_value;
+                }
             }
         }
         return $this->sale_price;

@@ -41,7 +41,7 @@ class ClientReceiptController extends BasicApiController
                     $transactions [$index] =[
                         'date_time'     => Carbon::parse($detail['date']),
                         'client_id'     => $detail['client_id'],
-                        'bill_id'       => $detail['bill_id'],
+                        'bill_id'       => $detail['bill_id'] ?? 0,
                         'amount'        => $detail['amount'],
                         'type'          => $transaction_type,
                         'effect'        => $effect,

@@ -60,7 +60,7 @@ class ClientController extends GeneralApiController
         ini_set('memory_limit', '256M');
 
         $file_name = $this->checkFile($client_id);
-        \Excel::store(new ClientBalanceExport($client_id, $request->all()), $file_name);
+        \Excel::store(new ClientBalanceExport($client, $request->all()), $file_name);
         return $this->sendResponse(result: ['file' => url($file_name)]);
     }
 

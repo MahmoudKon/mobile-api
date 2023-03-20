@@ -205,10 +205,10 @@ class InvoiceService
         $git = $this->invoice->net_price;
         $pay = $this->invoice->payment;
 
-        if ($this->type != Invoice::SALES) {
-            $git = $this->invoice->payment;
-            $pay = $this->invoice->net_price;
-        }
+//        if ($this->type != Invoice::SALES) {
+//            $git = $this->invoice->payment;
+//            $pay = $this->invoice->net_price;
+//        }
 
         ClientTransaction::create([
             'user_id'           => authId(),
