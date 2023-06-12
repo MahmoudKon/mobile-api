@@ -11,6 +11,7 @@ use App\Models\Badrshop;
 use App\Models\Client;
 use App\Models\ClientsGroup;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ClientController extends GeneralApiController
 {
@@ -60,7 +61,7 @@ class ClientController extends GeneralApiController
         ini_set('memory_limit', '256M');
 
         $file_name = $this->checkFile($client_id);
-        \Excel::store(new ClientBalanceExport($client, $request->all()), $file_name);
+        Excel::store(new ClientBalanceExport($client, $request->all()), $file_name);
         return $this->sendResponse(result: ['file' => url($file_name)]);
     }
 
@@ -83,7 +84,7 @@ class ClientController extends GeneralApiController
 
     public function query(?int $id = null): \Illuminate\Database\Eloquent\Builder
     {
-        return $this->model::query()->selectRaw('id, client_name, tele, client_tax_number, shop_id, address, group_id, FORMAT(balance, 2) as balance, lat, lon, price_list_id')
+        return $this->model::query()->selectRaw('id, client_name, tele, client_tax_number, shop_id, address, group_id, FORMAT(balance, 2) as balance, lat, lon, price_list_id, price')
                             ->whereIn('client_role', [0, 2])
                             ->when($id, fn($q) => $q->where('id', $id))
                             ->when(authUser()->clients_group, function ($query) {

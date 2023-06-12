@@ -41,7 +41,7 @@ class InvoiceService
             $this->type = $type;
             foreach ($data['bills'] as $bill) {
                 $result = Validator::make($bill, (new InvoiceRequest)->single_rules());
-                if ($result->fails()) contunue;
+                if ($result->fails()) continue;
 
                 $this->resetProperties(); // make all properties null
                 $this->salePoint = SalePoint::select('store_id', 'id', 'currency_id', 'money_point')->whereId($bill['sale_point'])->first();

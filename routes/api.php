@@ -49,6 +49,7 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
             Route::get('lists', 'prices');
             Route::get('cities', 'cities');
             Route::get('sale-points', 'salePoints');
+            Route::get('stores', 'stores');
         });
 
 
@@ -71,6 +72,8 @@ Route::namespace('Api')->middleware('auth:sanctum')->group(function () {
             Route::post('new-bill', 'newBill');
             Route::post('new-back-bill', 'newBackBill');
         });
+
+        Route::post('requests', 'NewRequestController@store');
 
 
         Route::get('balance-sheet', 'ClientReceiptController@index');

@@ -25,6 +25,7 @@ class ClientsResource extends JsonResource
             'lat' => $this->lat,
             'lon' => $this->lon,
             'list_id' => $this->price_list_id,
+            'price' => $this->price ?? 0,
         ];
     }
 }

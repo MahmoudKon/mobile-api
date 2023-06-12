@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api\Rep;
 
 use App\Http\Controllers\BasicApiController;
 use App\Http\Resources\SettingsResource;
+use App\Http\Resources\StoresResource;
 use App\Models\Badrshop;
 use App\Models\City;
 use App\Models\PriceList;
 use App\Models\SalePoint;
+use App\Models\Store;
 
 class GeneralListController extends BasicApiController
 {
@@ -32,5 +34,11 @@ class GeneralListController extends BasicApiController
     {
         $rows = SalePoint::query()->select('id', 'point_name as name')->get()->toArray();
         return $this->returnData($rows);
+    }
+
+    public function stores()
+    {
+        $rows = Store::query()->select('id', 'store_name', 'img')->get();
+        return $this->sendResponse(result: ['data' => StoresResource::collection($rows)]);
     }
 }
