@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api;
 
 use App\Traits\HandleValidationError;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Unique;
 
 class ClientRequest extends FormRequest
 {
