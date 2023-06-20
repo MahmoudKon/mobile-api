@@ -23,6 +23,7 @@ class NewRequestService
     protected Store $store;
     protected Client $client;
     protected NewRequest $request;
+    protected Calculator $calculator;
     protected $type;
     protected $items;
     protected array $details = [];
@@ -43,17 +44,17 @@ class NewRequestService
                     $result = Validator::make($request, (new NewRequestRequest())->single_rules());
                     if ($result->fails()) continue;
 
-                    // if ($id = $this->checkRequestExists($request)) {
-                    //     $this->saved_requests[] = ['receipt_number' => $request['receipt_number'], 'bill_id' => $id];
-                    //     continue;
-                    // }
+                    if ($id = $this->checkRequestExists($request)) {
+                        $this->saved_requests[] = ['receipt_number' => $request['receipt_number'], 'bill_id' => $id];
+                        continue;
+                    }
 
                     $this->resetProperties(); // make all properties null
                     $this->salePoint = SalePoint::select('id', 'currency_id', 'money_point')->whereId( salePointId() )->first();
                     $this->store     = Store::select('id')->whereId( $request['store_id'] )->first();
                     $this->client    = Client::select('id', 'balance', 'price')->find($request['client_id']);
                     $this->items     = collect( $request['items'] );
-                    $this->calculateItemsNetQuantity();
+                    $this->setCalculator($this->items[0]);
 
                     // To create new invoice
                     $this->createRequest($request);
@@ -72,36 +73,31 @@ class NewRequestService
         }
     }
 
-    protected function calculateItemsNetQuantity()
+    protected function setCalculator(array $data)
     {
-        $this->items->each(function($item, $index) {
-            $item['net_quantity'] = $this->calc($item);
-            $item['price']        = $item['net_quantity'] * $this->client->price;
-            $this->items[$index] = $item;
-        });
+        $this->calculator = new Calculator();
+        $this->calculator->setQuantity($data['quantity'])->setWater($data['water'])
+                            ->setFats($data['fats'])
+                            ->setProtein($data['protein'])
+                            ->setPrice($this->client->price)
+                            ->setFee($data['fee'] ?? 0)
+                            ->calculate();
     }
 
-    protected function calc($item)
-    {
-        $water   = $item['quantity'] * ($item['water'] / 100);
-        $protein = $item['quantity'] * ($item['protein'] / 100);
-        $fats    = $item['quantity'] * ($item['fats'] / 100);
-        return $item['quantity'] - ($water + $protein + $fats);
-    }
 
     protected function createRequest(array $request): void
     {
-        $net = $this->items->sum('price');
         $this->request   = NewRequest::create([
             'user_id'    => authId(),
             'client_id'  => $this->client->id,
-            'total'      => $net,
-            'net'        => $net,
+            'store_id'   => $request['store_id'],
+            'total'      => $this->calculator->total,
+            'net'        => $this->calculator->net_price,
             'no_bill'    => $request['receipt_number'],
             'order_no'   => NewRequest::getMax(),
             'type'       => 1,
             'rest'       => 0,
-            'created_at' => Carbon::parse($request['date_time']),
+            'invoice_date' => Carbon::parse($request['date_time']),
         ]);
     }
 
@@ -117,15 +113,19 @@ class NewRequestService
     protected function createInvoiceDetails(array $item): void
     {
         $this->details [] = [
-                    'shop_id'          => shopId(),
-                    'request_id'       => $this->request->id,
-                    'item_id'          => $item['item_id'],
-                    'quantity'         => $item['net_quantity'],
-                    'price'            => $item['price'],
-                    'unit_id'          => Item::select('unit_id')->find($item['item_id'])->unit_id ?? 0,
-                    'water'            => $item['water'],
-                    'protein'          => $item['protein'],
-                    'fats'             => $item['fats'],
+                    'shop_id'        => shopId(),
+                    'request_id'     => $this->request->id,
+                    'item_id'        => $item['item_id'],
+                    'unit_id'        => Item::select('unit_id')->find($item['item_id'])->unit_id ?? 0,
+                    'quantity'       => $this->calculator->quantity,
+                    'price'          => $this->calculator->quantity * $this->calculator->price,
+                    'sale_price'     => $this->calculator->price,
+                    'water'          => $this->calculator->water,
+                    'water_discount' => $this->calculator->water_discount,
+                    'protein'        => $this->calculator->protein,
+                    'protein_bonus'  => $this->calculator->protein_bonus,
+                    'fats'           => $this->calculator->fats,
+                    'fats_bonus'     => $this->calculator->fats_bonus
                 ];
     }
 

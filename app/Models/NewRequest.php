@@ -13,8 +13,6 @@ class NewRequest extends Model
 
     protected $fillable = ['shop_id', 'user_id', 'store_id', 'client_id', 'total', 'no_bill', 'order_no', 'net', 'type', 'rest', 'created_at'];
 
-    public $timestamps = false;
-
     const PURCHASES = 0;
     
     const SALES = 1;
