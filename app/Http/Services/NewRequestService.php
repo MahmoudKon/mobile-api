@@ -83,7 +83,7 @@ class NewRequestService
 
     protected function getExistsRequest(array $request): NewRequest
     {
-        return NewRequest::where(['no_bill' => $request['receipt_number'], 'client_id' => $request['client_id'], 'total' => $this->calculator->total, 'invoice_date' => $request['date']])
+        return NewRequest::where(['no_bill' => $request['receipt_number'], 'client_id' => $request['client_id'], 'total' => $this->calculator->total, 'invoice_date' => $request['date_time']])
                                         ->first();
     }
 
