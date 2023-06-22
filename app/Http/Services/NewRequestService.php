@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use PDOException;
 
 class NewRequestService
 {
@@ -38,9 +39,9 @@ class NewRequestService
     {
         $this->type = $type;
         \Illuminate\Support\Facades\Log::info(json_encode($data));
-        try {
-            DB::beginTransaction();
-                foreach ($data['requests'] as $request) {
+        DB::beginTransaction();
+            foreach ($data['requests'] as $request) {
+                try {
                     $result = Validator::make($request, (new NewRequestRequest())->single_rules());
                     if ($result->fails()) continue;
 
@@ -63,14 +64,27 @@ class NewRequestService
 
                     // To create invoice log
                     $this->newInvoiceLog();
+                    
                     $this->saved_requests[] = ['receipt_number' => $this->request->no_bill, 'bill_id' => $this->request->id];
-                }
-            DB::commit();
 
-            return ['status' => 200, 'data' => $this->saved_requests];
-        } catch (Exception $e) {
-            return ['status' => 500, 'message' => $e->getMessage()];
-        }
+                } catch (Exception $e) {
+                    if ($e instanceof PDOException) {
+                        $request = $this->getExistsRequest($request);
+                        if ($request) {
+                            $this->saved_requests[] = ['receipt_number' => $request->no_bill, 'bill_id' => $request->id];
+                        }
+                    }
+                }
+            }
+        DB::commit();
+
+        return ['status' => 200, 'data' => $this->saved_requests];
+    }
+
+    protected function getExistsRequest(array $request): NewRequest
+    {
+        return NewRequest::where(['no_bill' => $request['receipt_number'], 'client_id' => $request['client_id'], 'total' => $this->calculator->total, 'invoice_date' => $request['date']])
+                                        ->first();
     }
 
     protected function setCalculator(array $data)

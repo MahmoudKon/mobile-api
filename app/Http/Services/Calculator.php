@@ -8,6 +8,7 @@ class Calculator
     public float $price = 0;
     public float $total = 0;
     public float $net_price = 0;
+    public float $static_net_price = 0;
     public float $water = 0;
     public float $protein = 0;
     public float $fats = 0;
@@ -15,7 +16,6 @@ class Calculator
     public float $net_quantity = 0;
     public float $protein_bonus = 0;
     public float $fats_bonus = 0;
-
     public float $fee = 0;
 
     public function calculate()
@@ -25,6 +25,7 @@ class Calculator
         $this->calculateNetPrice();
         $this->calculateProteinBonus();
         $this->calculateFatsBonus();
+        $this->calculateEndPrice();
         $this->calculateTotalPrice();
     }
 
@@ -66,46 +67,46 @@ class Calculator
     public function calculateWaterDiscount()
     {
         $this->water_discount = $this->quantity * ($this->water / 100);
-
         return $this;
     }
 
     public function calculateNetQuantity()
     {
         $this->net_quantity = $this->quantity - $this->water_discount;
-
         return $this;
     }
 
     public function calculateNetPrice()
     {
-        $this->net_price = $this->net_quantity * $this->price;
-
+        $this->static_net_price = $this->net_quantity * $this->price;
         return $this;
     }
 
     public function calculateProteinBonus()
     {
-        $this->protein_bonus = $this->calculateBonus($this->protein, 3.20, ['min' => 3.00, 'max' => 3.10]);
-
+        $this->protein_bonus = $this->calculateBonus($this->protein, 3.20, ['min' => 3.00, 'max' => 3.10], ['main' => 0.03, 'sub' => 0.015]);
         return $this;
     }
 
     public function calculateFatsBonus()
     {
-        $this->fats_bonus = $this->calculateBonus($this->fats, 3.80, ['min' => 3.50, 'max' => 3.70]);
+        $this->fats_bonus = $this->calculateBonus($this->fats, 3.80, ['min' => 3.50, 'max' => 3.70], ['main' => 0.05, 'sub' => 0.025]);
+        return $this;
+    }
 
+    public function calculateEndPrice()
+    {
+        $this->net_price = $this->fats_bonus + $this->protein_bonus + $this->static_net_price;
         return $this;
     }
 
     public function calculateTotalPrice()
     {
-        $this->total = $this->fats_bonus + $this->protein_bonus + $this->net_price + $this->fee;
-
+        $this->total = $this->static_net_price + $this->fee;
         return $this;
     }
 
-    protected function calculateBonus(float $percentage, float $start, array $zeroRange)
+    protected function calculateBonus(float $percentage, float $start, array $zeroRange, array $bonus_values)
     {
         $percentage = number_format($percentage, 2);
         $bonus = 0;
@@ -117,17 +118,17 @@ class Calculator
             $bonus = 0;
         } else if ( $percentage >= $start ) {
             $result = ($percentage - $zeroRange['max']) * 10;
-            $bonus = ($result * .05);
+            $bonus = ($result * $bonus_values['main']);
             if ($last_number > 0 && $last_number <= 9) {
-                $bonus += .025;
+                $bonus += $bonus_values['sub'];
             }
         } else if ($percentage < 3.5 && $percentage >= 2.5) {
             $result = ($percentage - $zeroRange['min']) * 10;
-            $bonus = ($result * .05);
+            $bonus = ($result * $bonus_values['main']);
             if ($last_number > 0 && $last_number <= 9) {
-                $bonus -= .025;
+                $bonus -= $bonus_values['sub'];
             }
         }
-        return number_format($bonus, 3) * $this->quantity * $this->price;
+        return number_format($bonus, 3) * $this->static_net_price;
     }
 }

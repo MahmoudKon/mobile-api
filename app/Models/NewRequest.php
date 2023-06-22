@@ -11,7 +11,7 @@ class NewRequest extends Model
 
     protected $table = 'requests';
 
-    protected $fillable = ['shop_id', 'user_id', 'store_id', 'client_id', 'total', 'no_bill', 'order_no', 'net', 'type', 'rest', 'created_at'];
+    protected $fillable = ['shop_id', 'user_id', 'store_id', 'client_id', 'total', 'no_bill', 'order_no', 'net', 'type', 'rest', 'invoice_date'];
 
     const PURCHASES = 0;
     
